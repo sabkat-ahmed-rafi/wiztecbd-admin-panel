@@ -8,7 +8,7 @@ export default function Sidebar({ className }) {
     <>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="lg:hidden fixed top-3 left-3 z-20 shadow-lg  text-black p-2 border rounded-lg px-3"
+        className="lg:hidden fixed top-3 left-3 z-20 shadow-lg  text-black p-2 border border-slate-200 rounded-lg px-3"
       >
         {isOpen ? '✕' : '☰'}
       </button>

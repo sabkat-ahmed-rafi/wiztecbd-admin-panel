@@ -15,7 +15,7 @@ export default function Sidebar({ className }) {
       <div
         className={`p-4 pt-9 ${className} ${
           isOpen ? 'block' : 'hidden'
-        } lg:block lg:w-64`}
+        } lg:block lg:w-64 border-r border-slate-300`}
       >
         <ul>
           <li className="mb-4">

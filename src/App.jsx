@@ -6,12 +6,14 @@ import Blogs from './Components/Blogs/Blogs';
 import Enquiries from './Components/Enquiries/Enquiries';
 import Login from './Components/Auth/Login';
 import ProtectedRoute from './Components/Auth/ProtectedRoute';
+import Signup from './Components/Auth/Signup';
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/sign-up" element={<Signup />} />
         <Route path="*" element={
           <ProtectedRoute>
             <div className="app flex flex-col h-screen">

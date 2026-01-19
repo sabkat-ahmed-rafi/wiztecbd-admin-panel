@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -84,7 +84,7 @@ export default function Login() {
           <button
             type="submit"
             disabled={loading}
-            className={`w-full py-3 px-4 rounded-lg text-black font-medium text-lg transition duration-200 ${loading ? 'bg-slate-400 cursor-not-allowed' : 'bg-white hover:bg-slate-200 cursor-pointer'}`}
+            className={`w-full py-3 px-4 rounded-lg text-black font-medium text-lg transition duration-200 hover:scale-95 active:scale-105 ${loading ? 'bg-slate-400 cursor-not-allowed' : 'bg-white hover:bg-slate-200 cursor-pointer'}`}
           >
             {loading ? (
               <span className="flex items-center justify-center">
@@ -97,6 +97,15 @@ export default function Login() {
             ) : 'Sign In'}
           </button>
         </form>
+
+        <div className="mt-6 text-center">
+          <p className="text-sm text-gray-600">
+            Don't have an account?{' '}
+            <Link to="/sign-up" className="text-white hover:text-gray-300 font-medium hover:underline">
+              Sign Up
+            </Link>
+          </p>
+        </div>
 
         <div className="mt-8 text-center text-sm text-gray-600">
           <p>© {new Date().getFullYear()} WizTecBD Admin Panel</p>

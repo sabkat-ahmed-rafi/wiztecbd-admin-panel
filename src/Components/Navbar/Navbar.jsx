@@ -13,7 +13,7 @@ export default function Navbar({ className }) {
   return (
     <div className={`bg-white text-gray-800 p-4 shadow-lg ${className}`}>
       <div className="flex items-center justify-between">
-        <div className='w-40 ml-10 lg:ml-0'><img src="/logo.png" alt="" /></div>
+        <a href='https://wiztecbd.com' target='_blank' className='w-40 ml-10 lg:ml-0'><img src="/logo.png" alt="" /></a>
         <div>
         <button
           onClick={handleLogout}

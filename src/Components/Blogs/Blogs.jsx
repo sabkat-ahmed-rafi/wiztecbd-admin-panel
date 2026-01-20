@@ -1,26 +1,216 @@
+import { useState, useEffect } from 'react';
+import api from '../../config/axiosConfig';
+import { Link } from 'react-router-dom';
+
 export default function Blogs() {
+  const [blogs, setBlogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+
+  const fetchBlogs = async (page = 1) => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await api.get(`/api/get-blogs?page=${page}&limit=1`);
+      
+      if (response.data.status === 200) {
+        setBlogs(response.data.blogs);
+        setTotalPages(response.data.pagination.totalPages);
+        setTotalItems(response.data.pagination.totalItems);
+        setCurrentPage(response.data.pagination.currentPage);
+      }
+    } catch (err) {
+      setError('Failed to fetch blogs. Please try again later.');
+      console.error('Error fetching blogs:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchBlogs(currentPage);
+  }, [currentPage]);
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
+  const handlePageChange = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-linear-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mb-4"></div>
+          <p className="text-gray-600 text-lg">Loading blogs...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-linear-to-br from-red-50 to-pink-100 flex items-center justify-center p-4">
+        <div className="text-center max-w-md">
+          <div className="text-red-500 text-6xl mb-4">⚠️</div>
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">Oops!</h2>
+          <p className="text-gray-600 mb-6">{error}</p>
+          <button 
+            onClick={() => fetchBlogs(currentPage)}
+            className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors duration-200"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="p-6 bg-gray-50 rounded-lg shadow-md">
-      <h2 className="text-3xl font-bold mb-6 text-gray-800">Blogs</h2>
-      <p className="text-gray-600 leading-relaxed mb-6">
-        Here you can manage your blog posts. Create, edit, and delete posts to keep your content fresh and engaging.
-      </p>
-      <div className="bg-white p-4 rounded-lg shadow-sm">
-        <h3 className="text-lg font-semibold text-gray-700 mb-2">Recent Posts</h3>
-        <ul className="space-y-2">
-          <li className="flex justify-between items-center p-2 border-b border-gray-200">
-            <span className="text-gray-600">Introduction to React</span>
-            <span className="text-sm text-gray-400">June 1, 2023</span>
-          </li>
-          <li className="flex justify-between items-center p-2 border-b border-gray-200">
-            <span className="text-gray-600">Getting Started with Tailwind CSS</span>
-            <span className="text-sm text-gray-400">May 28, 2023</span>
-          </li>
-          <li className="flex justify-between items-center p-2 border-b border-gray-200">
-            <span className="text-gray-600">Advanced JavaScript Techniques</span>
-            <span className="text-sm text-gray-400">May 20, 2023</span>
-          </li>
-        </ul>
+    <div className="min-h-screen bg-linear-to-br p-4 md:p-8">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
+            <span className="bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent">
+              Blog Posts
+            </span>
+          </h1>
+          <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+            Discover insights, stories, and knowledge from our experts
+          </p>
+          <div className="mt-2 text-sm text-gray-500">
+            {totalItems} posts across {totalPages} pages
+          </div>
+        </div>
+
+        {/* Blogs Grid */}
+        {blogs.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+            {blogs.map((blog) => (
+              <article 
+                key={blog.id}
+                className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden transform hover:-translate-y-1"
+              >
+                {/* Blog Image */}
+                <div className="h-48 bg-linear-to-br from-primary to-secondary flex items-center justify-center">
+                  {blog.image ? (
+                    <img 
+                      src={blog.image} 
+                      alt={blog.title}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="text-white text-6xl">📝</div>
+                  )}
+                </div>
+
+                {/* Blog Content */}
+                <div className="p-6">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="bg-secondary text-white text-xs font-semibold px-2.5 py-1 rounded-full">
+                      {blog.readTime} min read
+                    </span>
+                    <span className="text-gray-500 text-sm">
+                      {formatDate(blog.createdAt)}
+                    </span>
+                  </div>
+
+                  <h3 className="text-xl font-bold text-gray-800 mb-3 line-clamp-2">
+                    {blog.title}
+                  </h3>
+
+                  <p className="text-gray-600 mb-4 line-clamp-3">
+                    {blog.content}
+                  </p>
+
+                  <div className="flex items-center justify-between">
+                    <button className='bg-linear-to-r from-rose-600 to-rose-400 text-white px-2 py-1 rounded-md text-sm font-medium cursor-pointer hover:scale-105 active:scale-95 transition-transform'>Delete</button>
+                    <Link to={''} className="text-primary font-medium text-sm transition-colors duration-200">
+                      Read More →
+                    </Link>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-12">
+            <div className="text-gray-400 text-6xl mb-4">📭</div>
+            <h3 className="text-xl font-semibold text-gray-600 mb-2">No blogs found</h3>
+            <p className="text-gray-500">Check back later for new content!</p>
+          </div>
+        )}
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center space-x-2">
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className={`px-4 py-2 rounded-lg transition-colors duration-200 ${
+                currentPage === 1
+                  ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                  : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-300'
+              }`}
+            >
+              ← Previous
+            </button>
+
+            <div className="flex space-x-1">
+              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                let pageNum;
+                if (totalPages <= 5) {
+                  pageNum = i + 1;
+                } else if (currentPage <= 3) {
+                  pageNum = i + 1;
+                } else if (currentPage >= totalPages - 2) {
+                  pageNum = totalPages - 4 + i;
+                } else {
+                  pageNum = currentPage - 2 + i;
+                }
+
+                return (
+                  <button
+                    key={pageNum}
+                    onClick={() => handlePageChange(pageNum)}
+                    className={`px-4 py-2 rounded-lg transition-colors duration-200 ${
+                      currentPage === pageNum
+                        ? 'bg-primary text-white'
+                        : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-300'
+                    }`}
+                  >
+                    {pageNum}
+                  </button>
+                );
+              })}
+            </div>
+
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className={`px-4 py-2 rounded-lg transition-colors duration-200 ${
+                currentPage === totalPages
+                  ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                  : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-300'
+              }`}
+            >
+              Next →
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

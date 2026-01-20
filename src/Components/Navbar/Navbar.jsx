@@ -1,15 +1,12 @@
 import { useNavigate } from 'react-router-dom';
 import './Navbar.css';
+import Cookies from 'js-cookie';
 
 export default function Navbar({ className }) {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // Clear authentication state
-    localStorage.removeItem('isAuthenticated');
-    localStorage.removeItem('userEmail');
-    
-    // Redirect to login page
+    Cookies.remove("accessToken");
     navigate('/login');
   };
 

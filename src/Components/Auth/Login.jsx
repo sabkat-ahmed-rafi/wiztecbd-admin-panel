@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { config } from '../../config/config';
+import Cookies from "js-cookie";
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -8,26 +11,49 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
 
-    // Check credentials
-    if (email === 'abc@gmail.com' && password === '123456') {
-      // Store authentication state
-      localStorage.setItem('isAuthenticated', 'true');
-      localStorage.setItem('userEmail', email);
-      
-      // Redirect to dashboard
-      setTimeout(() => {
-        navigate('/dashboard');
-        setLoading(false);
-      }, 1000);
-    } else {
-      setError('Invalid credentials. Please try again.');
+    // Basic validation
+    if (!email.trim()) {
+      setError('Email is required');
       setLoading(false);
+      return;
     }
+
+    if (!password) {
+      setError('Password is required');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const response = await axios.post(`${config.backend}/api/admin/login`, {
+        email,
+        password
+      }, {
+        headers: {
+          "x-api-key": config.apiKey,
+        },
+      });
+
+      if (response.data.status === 200) {
+        const token = response.data.token;
+        Cookies.set("accessToken", token, {
+          expires: 30,          
+          secure: true,
+          sameSite: "strict",
+        });
+        navigate('/');
+      }
+    } catch (error) {
+      console.log(error)
+      setError('Invalid email or password. Please try again.');
+    }
+    
+    setLoading(false);
   };
 
   return (

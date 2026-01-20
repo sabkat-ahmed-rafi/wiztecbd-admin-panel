@@ -1,11 +1,13 @@
 import { Navigate } from 'react-router-dom';
+import Cookies from "js-cookie";
 
 export default function ProtectedRoute({ children }) {
-  const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
-  const userEmail = localStorage.getItem('userEmail');
+  const token = Cookies.get("accessToken");
 
-  // Check if user is authenticated and has the correct email
-  if (!isAuthenticated || userEmail !== 'abc@gmail.com') {
+  const isAuthenticated = Boolean(token)
+
+  // Check if user is authenticated
+  if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
 

@@ -7,10 +7,12 @@ import Enquiries from './Components/Enquiries/Enquiries';
 import Login from './Components/Auth/Login';
 import ProtectedRoute from './Components/Auth/ProtectedRoute';
 import Signup from './Components/Auth/Signup';
+import SmoothFollower from './Components/animation/SmoothFollower';
 
 function App() {
   return (
     <Router>
+      <SmoothFollower />
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/sign-up" element={<Signup />} />

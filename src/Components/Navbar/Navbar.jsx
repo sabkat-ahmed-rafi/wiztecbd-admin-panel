@@ -13,7 +13,7 @@ export default function Navbar({ className }) {
   return (
     <div className={`bg-white text-gray-800 p-4 shadow-lg ${className}`}>
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold tracking ml-12 lg:ml-0 text-slate-800">WiztecBD</h1>
+        <div className='w-40 ml-10 lg:ml-0'><img src="/logo.png" alt="" /></div>
         <div>
         <button
           onClick={handleLogout}

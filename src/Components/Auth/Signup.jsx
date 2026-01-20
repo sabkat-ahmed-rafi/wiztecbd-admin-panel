@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { config } from '../../config/config';
+
 
 export default function Signup() {
   const [name, setName] = useState('');
@@ -19,12 +22,6 @@ export default function Signup() {
         setError('Please select a valid image file');
         return;
       }
-      
-      // Validate file size (max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        setError('Image size must be less than 5MB');
-        return;
-      }
 
       setProfilePicture(file);
       
@@ -39,7 +36,7 @@ export default function Signup() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
@@ -77,8 +74,18 @@ export default function Signup() {
       profilePicture
     };
 
-    // Log the form data
-    console.log('Form Data:', formData);
+    try {
+      const response = await axios.post(`${config.backend}/api/admin/register`, formData, {
+         headers: {
+          "x-api-key": config.apiKey,
+         },
+        })
+      if(response.data.status == 201) {
+        navigate('/');
+      }
+    } catch (error) {
+      setError('An error occurred during signup. Please try again.');
+    }
     
     setLoading(false);
   };

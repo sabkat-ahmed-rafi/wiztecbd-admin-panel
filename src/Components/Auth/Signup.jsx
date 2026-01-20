@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { config } from '../../config/config';
+import Cookies from "js-cookie";
+
 
 
 export default function Signup() {
@@ -81,6 +83,12 @@ export default function Signup() {
          },
         })
       if(response.data.status == 201) {
+        const token = response.data.token;
+        Cookies.set("accessToken", token, {
+          expires: 30,          
+          secure: true,
+          sameSite: "strict",
+        });
         navigate('/');
       }
     } catch (error) {

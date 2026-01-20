@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import api from '../../config/axiosConfig';
 import { Link } from 'react-router-dom';
+import AddBlogModal from './AddBlogModal';
 
 export default function Blogs() {
   const [blogs, setBlogs] = useState([]);
@@ -9,6 +10,7 @@ export default function Blogs() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
+  const [showAddModal, setShowAddModal] = useState(false);
 
   const fetchBlogs = async (page = 1) => {
     try {
@@ -49,6 +51,10 @@ export default function Blogs() {
     }
   };
 
+  const handleBlogAdded = () => {
+    fetchBlogs(currentPage);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-linear-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
@@ -82,18 +88,29 @@ export default function Blogs() {
     <div className="min-h-screen bg-linear-to-br p-4 md:p-8">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
-            <span className="bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent">
-              Blog Posts
-            </span>
-          </h1>
-          <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-            Discover insights, stories, and knowledge from our experts
-          </p>
-          <div className="mt-2 text-sm text-gray-500">
-            {totalItems} posts across {totalPages} pages
+        <div className="flex flex-col md:flex-row justify-between items-center mb-12">
+          <div className="text-center md:text-left mb-4 md:mb-0">
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
+              <span className="bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent">
+                Blog Posts
+              </span>
+            </h1>
+            <p className="text-gray-600 text-lg max-w-2xl">
+              Discover insights, stories, and knowledge from our experts
+            </p>
+            <div className="mt-2 text-sm text-gray-500">
+              {totalItems} posts across {totalPages} pages
+            </div>
           </div>
+          <button
+            onClick={() => setShowAddModal(true)}
+            className="bg-linear-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-105 flex items-center space-x-2 shadow-lg"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+            <span className="font-medium">Create Blog</span>
+          </button>
         </div>
 
         {/* Blogs Grid */}
@@ -211,6 +228,13 @@ export default function Blogs() {
             </button>
           </div>
         )}
+
+        {/* Add Blog Modal */}
+        <AddBlogModal
+          isOpen={showAddModal}
+          onClose={() => setShowAddModal(false)}
+          onBlogAdded={handleBlogAdded}
+        />
       </div>
     </div>
   );

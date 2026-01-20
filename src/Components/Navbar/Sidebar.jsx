@@ -37,7 +37,11 @@ export default function Sidebar({ className }) {
                 isActive('/dashboard')
                   ? 'bg-[#ecfbda] text-[#6ab40a] border-l-4 border-[#8bc43f] font-medium'
                   : 'hover:bg-gray-200'
-              }`}
+              } ${
+                isActive('/')
+                  ? 'bg-[#ecfbda] text-[#6ab40a] border-l-4 border-[#8bc43f] font-medium'
+                  : 'hover:bg-gray-200'
+              } `}
             >
               <FaChartBar className="mr-3" size={20} />
               <span>Dashboard</span>

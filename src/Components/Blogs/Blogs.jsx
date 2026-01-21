@@ -23,6 +23,18 @@ export default function Blogs() {
   const [showBlogModal, setShowBlogModal] = useState(false);
   const [selectedBlog, setSelectedBlog] = useState(null);
 
+  // Helper function to strip HTML tags and get plain text
+  const stripHtmlTags = (html) => {
+    if (!html) return '';
+    return html
+      .replace(/<[^>]*>/g, '') // Remove all HTML tags
+      .replace(/&nbsp;/g, ' ') // Replace non-breaking spaces
+      .replace(/&lt;/g, '<')   // Decode HTML entities
+      .replace(/&gt;/g, '>')
+      .replace(/&amp;/g, '&')
+      .trim();
+  };
+
   useEffect(() => {
     fetchBlogs(currentPage);
   }, [currentPage]);
@@ -147,7 +159,7 @@ export default function Blogs() {
                   </h3>
 
                   <p className="text-gray-600 mb-4 line-clamp-3">
-                    {blog.content}
+                    {stripHtmlTags(blog.content)}
                   </p>
 
                   <div className="flex items-center justify-between">

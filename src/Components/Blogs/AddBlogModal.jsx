@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useBlogs } from '../../Hooks/useBlogs';
 import MultiSelect from './MultiSelect';
+import RichTextEditor from '../../utils/RichTextEditor';
 import toast from 'react-hot-toast';
 
 export default function AddBlogModal({ isOpen, onClose, onBlogAdded }) {
@@ -189,19 +190,12 @@ export default function AddBlogModal({ isOpen, onClose, onBlogAdded }) {
 
             {/* Content Input */}
             <div>
-              <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-2">
-                Blog Content *
-              </label>
-              <textarea
-                id="content"
-                name="content"
+              <RichTextEditor
                 value={formData.content}
-                onChange={handleInputChange}
-                disabled={loading}
-                rows="8"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200 disabled:opacity-50 resize-none"
-                placeholder="Write your blog content here..."
-                required
+                onChange={(value) => setFormData(prev => ({ ...prev, content: value }))}
+                label="Blog Content *"
+                error={!formData.content.trim() && error ? 'Content is required' : null}
+                minHeight="300px"
               />
             </div>
 

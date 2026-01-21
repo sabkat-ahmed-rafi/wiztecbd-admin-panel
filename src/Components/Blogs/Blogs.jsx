@@ -174,7 +174,7 @@ export default function Blogs() {
                         setSelectedBlog(blog);
                         setShowBlogModal(true);
                       }}
-                      className="text-primary font-medium text-sm transition-colors duration-200 hover:text-primary-dark"
+                      className="text-primary font-medium text-sm transition-colors duration-200 hover:text-primary-dark cursor-pointer"
                     >
                       Read More →
                     </button>

@@ -63,7 +63,7 @@ export default function MultiSelect({
       <div
         tabIndex={disabled ? -1 : 0}
         className={`w-full px-4 py-3 border border-gray-300 rounded-lg cursor-pointer transition-colors duration-200 ${
-          disabled ? 'bg-gray-100 cursor-not-allowed opacity-60' : 'hover:border-indigo-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500'
+          disabled ? 'bg-gray-100 cursor-not-allowed opacity-60' : 'hover:border-primary focus:ring-2 focus:ring-primary focus:border-primary'
         }`}
         onClick={() => !disabled && setIsOpen(!isOpen)}
         onKeyDown={(e) => {
@@ -85,12 +85,12 @@ export default function MultiSelect({
               return (
                 <span
                   key={option?.id || index}
-                  className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 text-indigo-800"
+                  className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-50 text-primary"
                 >
                   {name}
                   <button
                     type="button"
-                    className="ml-2 text-indigo-600 hover:text-indigo-800 focus:outline-none"
+                    className="ml-2 text-primary hover:text-secondary focus:outline-none"
                     onClick={(e) => handleRemoveTag(e, option?.id)}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' || e.key === ' ') {
@@ -136,14 +136,14 @@ export default function MultiSelect({
               placeholder="Search..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+              className="w-full px-3 py-2 border border-primary rounded-md  focus:ring-primary focus:border-primary text-sm"
               onClick={(e) => e.stopPropagation()}
               autoFocus
             />
           </div>
 
           {/* Options List */}
-          <div className="max-h-48  overflow-y-auto">
+          <div className="max-h-48 pb-4  overflow-y-auto">
             {filteredOptions.length === 0 ? (
               <div className="p-3 text-center text-gray-500 text-sm">
                 No options found
@@ -152,8 +152,8 @@ export default function MultiSelect({
               filteredOptions.map((option) => (
                 <div
                   key={option.id}
-                  className={`px-4 py-3 cursor-pointer transition-colors duration-200 hover:bg-indigo-50 ${
-                    selectedValues.includes(option.id) ? 'bg-indigo-50 border-l-4 border-indigo-500' : ''
+                  className={`px-4 py-3 cursor-pointer transition-colors duration-200 hover:bg-green-50 ${
+                    selectedValues.includes(option.id) ? 'bg-green-50 border-l-4 border-primary' : ''
                   }`}
                   onClick={() => handleOptionClick(option)}
                   onKeyDown={(e) => {
@@ -167,7 +167,7 @@ export default function MultiSelect({
                   <div className="flex items-center">
                     <div className={`w-4 h-4 rounded border-2 mr-3 flex items-center justify-center ${
                       selectedValues.includes(option.id)
-                        ? 'border-indigo-500 bg-indigo-500'
+                        ? 'border-primary bg-primary'
                         : 'border-gray-300'
                     }`}>
                       {selectedValues.includes(option.id) && (

@@ -336,7 +336,7 @@ const RichTextEditor = ({
   }
 
   return (
-    <div className="border border-gray-300 rounded-lg overflow-hidden focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500">
+    <div className="border border-gray-300 rounded-lg overflow-hidden focus-within:border-secondary focus-within:ring-1 focus-within:ring-primary ">
       {/* Label */}
       {label && (
         <label className="block text-sm font-medium text-gray-700 px-3 pt-2 pb-1">

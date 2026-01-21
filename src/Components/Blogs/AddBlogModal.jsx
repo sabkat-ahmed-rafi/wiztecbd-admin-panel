@@ -137,7 +137,7 @@ export default function AddBlogModal({ isOpen, onClose, onBlogAdded }) {
           <button
             onClick={handleClose}
             disabled={loading}
-            className="text-gray-400 hover:text-gray-600 transition-colors duration-200 disabled:opacity-50"
+            className="text-gray-400 hover:text-gray-600 disabled:opacity-50 cursor-pointer"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -182,7 +182,7 @@ export default function AddBlogModal({ isOpen, onClose, onBlogAdded }) {
                 value={formData.title}
                 onChange={handleInputChange}
                 disabled={loading}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200 disabled:opacity-50"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-primary disabled:opacity-50"
                 placeholder="Enter an engaging title for your blog..."
                 required
               />
@@ -212,7 +212,7 @@ export default function AddBlogModal({ isOpen, onClose, onBlogAdded }) {
                 onChange={handleInputChange}
                 disabled={loading}
                 min="1"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200 disabled:opacity-50"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg  focus:outline-primary disabled:opacity-50"
                 placeholder="5"
                 required
               />
@@ -221,9 +221,9 @@ export default function AddBlogModal({ isOpen, onClose, onBlogAdded }) {
             {/* Image Upload */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Blog Image (Optional)
+                Blog Image
               </label>
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-indigo-400 transition-colors duration-200">
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-primary">
                 {imagePreview ? (
                   <div className="relative">
                     <img 
@@ -249,7 +249,7 @@ export default function AddBlogModal({ isOpen, onClose, onBlogAdded }) {
                     </div>
                     <div>
                       <label className="cursor-pointer">
-                        <span className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors duration-200 disabled:opacity-50">
+                        <span className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary disabled:opacity-50">
                           Choose Image
                         </span>
                         <input
@@ -261,7 +261,7 @@ export default function AddBlogModal({ isOpen, onClose, onBlogAdded }) {
                         />
                       </label>
                       <p className="mt-2 text-sm text-gray-500">
-                        PNG, JPG, GIF (Max 5MB)
+                        PNG, JPG
                       </p>
                     </div>
                   </div>
@@ -275,7 +275,7 @@ export default function AddBlogModal({ isOpen, onClose, onBlogAdded }) {
               selectedValues={formData.expertiseIDs}
               onChange={handleExpertiseChange}
               placeholder="Select expertises..."
-              label="Select Expertises (Optional)"
+              label="Select Expertises"
               disabled={loading}
             />
           </div>
@@ -286,14 +286,14 @@ export default function AddBlogModal({ isOpen, onClose, onBlogAdded }) {
               type="button"
               onClick={handleClose}
               disabled={loading}
-              className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200 disabled:opacity-50"
+              className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 duration-200 disabled:opacity-50 hover:scale-105 active:scale-95 transition-transform cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-200 disabled:opacity-50 flex items-center"
+              className="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary duration-200 disabled:opacity-50 flex items-center hover:scale-105 active:scale-95 transition-transform cursor-pointer"
             >
               {loading ? (
                 <>

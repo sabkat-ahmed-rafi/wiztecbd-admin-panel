@@ -35,7 +35,7 @@ export default function BlogModal({ isOpen, onClose, blog }) {
           </h2>
           <button
             onClick={onClose}
-            className="shrink-0 text-gray-400 hover:text-gray-600 transition-colors duration-200 p-1"
+            className="shrink-0 text-gray-400 hover:text-gray-600 transition-colors duration-200 p-1 cursor-pointer"
             aria-label="Close modal"
           >
             <svg className="w-6 h-6 sm:w-7 sm:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -126,7 +126,7 @@ export default function BlogModal({ isOpen, onClose, blog }) {
         <div className="shrink-0 bg-gray-50 border-t border-gray-200 px-4 sm:px-6 py-4 flex justify-end">
           <button
             onClick={onClose}
-            className="bg-linear-to-r from-indigo-600 to-indigo-600 hover:from-indigo-700 hover:to-indigo-700 text-white font-medium px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg transition-all duration-200 text-sm sm:text-base"
+            className="bg-linear-to-r from-primary to-secondary text-white font-medium px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg transition-all duration-200 text-sm sm:text-base hover:scale-105 active:scale-95 cursor-pointer"
           >
             Close
           </button>

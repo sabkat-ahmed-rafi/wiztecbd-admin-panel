@@ -278,6 +278,7 @@ export default function Blogs() {
       isOpen={showAddModal}
       onClose={() => setShowAddModal(false)}
       onBlogAdded={handleBlogAdded}
+      loading={loading}
     />
 
     {/* Edit Blog Modal */}
@@ -289,6 +290,7 @@ export default function Blogs() {
       }}
       onBlogUpdated={handleBlogUpdated}
       blog={selectedBlog}
+      loading={loading}
     />
 
     {/* Blog Detail Modal */}

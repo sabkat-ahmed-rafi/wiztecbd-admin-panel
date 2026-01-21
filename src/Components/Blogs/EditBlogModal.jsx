@@ -4,7 +4,7 @@ import MultiSelect from './MultiSelect';
 import RichTextEditor from '../../utils/RichTextEditor';
 import toast from 'react-hot-toast';
 
-export default function EditBlogModal({ isOpen, onClose, onBlogUpdated, blog }) {
+export default function EditBlogModal({ isOpen, onClose, onBlogUpdated, blog, loading }) {
   const { updateBlog } = useBlogs();
 
   const [formData, setFormData] = useState({
@@ -28,7 +28,6 @@ export default function EditBlogModal({ isOpen, onClose, onBlogUpdated, blog }) 
   ]);
 
   const [imagePreview, setImagePreview] = useState(null);
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (blog) {
@@ -93,8 +92,6 @@ export default function EditBlogModal({ isOpen, onClose, onBlogUpdated, blog }) 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    setLoading(true);
-
     const result = await updateBlog(blog.id, formData);
 
     if (result.success) {
@@ -103,12 +100,7 @@ export default function EditBlogModal({ isOpen, onClose, onBlogUpdated, blog }) 
         onBlogUpdated();
       }
 
-      setTimeout(() => {
-        setLoading(false);
-        handleClose();
-      }, 1500);
-    } else {
-      setLoading(false);
+      handleClose();
     }
   };
 

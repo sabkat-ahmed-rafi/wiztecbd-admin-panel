@@ -3,7 +3,7 @@ import { useBlogs } from '../../Hooks/useBlogs';
 import MultiSelect from './MultiSelect';
 import RichTextEditor from '../../utils/RichTextEditor';
 
-export default function AddBlogModal({ isOpen, onClose, onBlogAdded }) {
+export default function AddBlogModal({ isOpen, onClose, onBlogAdded, loading }) {
   const { createBlog } = useBlogs();
 
   const [formData, setFormData] = useState({
@@ -26,7 +26,6 @@ export default function AddBlogModal({ isOpen, onClose, onBlogAdded }) {
   ]);
 
   const [imagePreview, setImagePreview] = useState(null);
-  const [loading, setLoading] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -75,11 +74,8 @@ export default function AddBlogModal({ isOpen, onClose, onBlogAdded }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    setLoading(true);
-
     const result = await createBlog(formData);
 
-    console.log(result)
     if (result.success) {
       
       setFormData({
@@ -95,12 +91,7 @@ export default function AddBlogModal({ isOpen, onClose, onBlogAdded }) {
         onBlogAdded();
       }
       
-      setTimeout(() => {
-        setLoading(false);
-        onClose();
-      }, 1500);
-    } else {
-      setLoading(false);
+      onClose();
     }
   };
 

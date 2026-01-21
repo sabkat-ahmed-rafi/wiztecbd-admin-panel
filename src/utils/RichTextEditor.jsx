@@ -500,7 +500,7 @@ const RichTextEditor = ({
       {/* Editor */}
       <EditorContent
         editor={editor}
-        className="px-3 py-2 min-h-30 max-h-100 overflow-auto cursor-text prose prose-sm sm:prose-base [&_ul]:list-disc [&_ol]:list-decimal [&_li]:ml-4 [&_li]:mb-1 [&_ul]:pl-4 [&_ol]:pl-4 [&_ul_li]:list-disc [&_ol_li]:list-decimal [&_a]:text-blue-600 [&_a]:hover:text-blue-800 [&_a]:hover:underline [&_a]:transition-colors [&_h1]:text-2xl [&_h1]:font-bold [&_h1]:mb-4 [&_h2]:text-xl [&_h2]:font-bold [&_h2]:mb-3 [&_h3]:text-lg [&_h3]:font-bold [&_h3]:mb-3 [&_h4]:text-base [&_h4]:font-bold [&_h4]:mb-2 [&_h5]:text-sm [&_h5]:font-bold [&_h5]:mb-2 [&_h6]:text-xs [&_h6]:font-bold [&_h6]:mb-2"
+        className="w-full px-3 py-2 min-h-30 max-h-100 overflow-auto cursor-text prose prose-sm sm:prose-base [&_ul]:list-disc [&_ol]:list-decimal [&_li]:ml-4 [&_li]:mb-1 [&_ul]:pl-4 [&_ol]:pl-4 [&_ul_li]:list-disc [&_ol_li]:list-decimal [&_a]:text-blue-600 [&_a]:hover:text-blue-800 [&_a]:hover:underline [&_a]:transition-colors [&_h1]:text-2xl [&_h1]:font-bold [&_h1]:mb-4 [&_h2]:text-xl [&_h2]:font-bold [&_h2]:mb-3 [&_h3]:text-lg [&_h3]:font-bold [&_h3]:mb-3 [&_h4]:text-base [&_h4]:font-bold [&_h4]:mb-2 [&_h5]:text-sm [&_h5]:font-bold [&_h5]:mb-2 [&_h6]:text-xs [&_h6]:font-bold [&_h6]:mb-2"
         style={{
           minHeight: minHeight,
           userSelect: "text",
@@ -509,6 +509,7 @@ const RichTextEditor = ({
           msUserSelect: "text",
         }}
         onKeyDown={handleKeyDown}
+        onClick={() => editor.chain().focus().run()}
       />
 
       {/* Error Message */}

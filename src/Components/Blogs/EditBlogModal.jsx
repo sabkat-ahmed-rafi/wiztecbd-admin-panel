@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
-import api from '../../config/axiosConfig';
+import { useBlogs } from '../../Hooks/useBlogs';
 import MultiSelect from './MultiSelect';
 
 export default function EditBlogModal({ isOpen, onClose, onBlogUpdated, blog }) {
+  const { updateBlog, loading: hookLoading } = useBlogs();
+
   const [formData, setFormData] = useState({
     title: '',
     content: '',
@@ -11,7 +13,8 @@ export default function EditBlogModal({ isOpen, onClose, onBlogUpdated, blog }) 
     image: null,
     currentImage: null
   });
-  const [availableExpertises, setAvailableExpertises] = useState([
+
+  const [availableExpertises] = useState([
     { id: 1, name: 'Web Development' },
     { id: 2, name: 'Mobile Development' },
     { id: 3, name: 'Data Science' },
@@ -21,12 +24,12 @@ export default function EditBlogModal({ isOpen, onClose, onBlogUpdated, blog }) 
     { id: 7, name: 'Cloud Computing' },
     { id: 8, name: 'Cybersecurity' }
   ]);
+
   const [imagePreview, setImagePreview] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  // Initialize form data when blog prop changes
   useEffect(() => {
     if (blog) {
       setFormData({
@@ -34,8 +37,8 @@ export default function EditBlogModal({ isOpen, onClose, onBlogUpdated, blog }) 
         content: blog.content || '',
         readTime: blog.readTime || 5,
         expertiseIDs: blog.expertiseIDs || [],
-        image: null, // New image file (if changed)
-        currentImage: blog.image // Current image URL/path
+        image: null,
+        currentImage: blog.image
       });
       setImagePreview(blog.image || null);
     }
@@ -59,7 +62,6 @@ export default function EditBlogModal({ isOpen, onClose, onBlogUpdated, blog }) 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Validate file type
       if (!file.type.startsWith('image/')) {
         setError('Please select a valid image file');
         return;
@@ -71,12 +73,10 @@ export default function EditBlogModal({ isOpen, onClose, onBlogUpdated, blog }) 
       };
       reader.readAsDataURL(file);
 
-      // Store the File object directly
       setFormData(prev => ({
         ...prev,
         image: file
       }));
-
     }
   };
 
@@ -85,74 +85,39 @@ export default function EditBlogModal({ isOpen, onClose, onBlogUpdated, blog }) 
     setFormData(prev => ({
       ...prev,
       image: null,
-      currentImage: null // Remove both new and current image
+      currentImage: null,
+      removeImage: true
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Validation
-    if (!formData.title.trim()) {
-      setError('Title is required');
-      return;
-    }
-    if (!formData.content.trim()) {
-      setError('Content is required');
-      return;
-    }
-    if (formData.readTime < 1) {
-      setError('Read time must be at least 1 minute');
-      return;
-    }
 
-    try {
-      setLoading(true);
-      setError('');
-      setSuccess('');
-      
-      // Create FormData for file upload
-      const submitData = new FormData();
-      submitData.append('title', formData.title);
-      submitData.append('content', formData.content);
-      submitData.append('readTime', formData.readTime);
-      submitData.append('expertiseIDs', JSON.stringify(formData.expertiseIDs));
-      
-      // Only append image if it's a new file
-      if (formData.image) {
-        submitData.append('image', formData.image);
-      }
-      
-      // Append a flag if we removed the image
-      if (!formData.image && !formData.currentImage && imagePreview === null) {
-        submitData.append('removeImage', 'true');
+    setLoading(true);
+    setError('');
+    setSuccess('');
+
+    const result = await updateBlog(blog.id, formData);
+
+    if (result.success) {
+      setSuccess('Blog updated successfully!');
+
+      if (onBlogUpdated) {
+        onBlogUpdated();
       }
 
-      const response = await api.put(`/api/update-blog/${blog.id}`, submitData);
-      
-      if (response.data.status === 200 || response.data.status === 201) {
-        setSuccess('Blog updated successfully!');
-        
-        // Notify parent component to refresh blogs
-        if (onBlogUpdated) {
-          onBlogUpdated();
-        }
-        
-        // Close modal after a short delay
-        setTimeout(() => {
-          handleClose();
-        }, 1500);
-      }
-    } catch (err) {
-      setError(err.response?.data?.message || 'Failed to update blog. Please try again.');
-      console.error('Error updating blog:', err);
-    } finally {
-      setLoading(false);
+      setTimeout(() => {
+        handleClose();
+      }, 1500);
+    } else {
+      setError(result.error);
     }
+
+    setLoading(false);
   };
 
   const handleClose = () => {
-    if (!loading) {
+    if (!loading && !hookLoading) {
       setFormData({
         title: '',
         content: '',

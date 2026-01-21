@@ -1,52 +1,30 @@
 import { useState, useEffect } from 'react';
-import api from '../../config/axiosConfig';
 import { Link } from 'react-router-dom';
+import { useBlogs } from '../../Hooks/useBlogs';
 import AddBlogModal from './AddBlogModal';
-import EditBlogModal from './EditBlogModal'; // Import the EditBlogModal
+import EditBlogModal from './EditBlogModal';
 
 export default function Blogs() {
-  const [blogs, setBlogs] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [totalItems, setTotalItems] = useState(0);
+  const {
+    blogs,
+    loading,
+    error,
+    currentPage,
+    totalPages,
+    totalItems,
+    setCurrentPage,
+    fetchBlogs,
+    deleteBlog,
+    formatDate
+  } = useBlogs();
+
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [selectedBlog, setSelectedBlog] = useState(null); // State to track blog being edited
-
-  const fetchBlogs = async (page = 1) => {
-    try {
-      setLoading(true);
-      setError(null);
-      const response = await api.get(`/api/get-blogs?page=${page}&limit=1`);
-      
-      if (response.data.status === 200) {
-        setBlogs(response.data.blogs);
-        setTotalPages(response.data.pagination.totalPages);
-        setTotalItems(response.data.pagination.totalItems);
-        setCurrentPage(response.data.pagination.currentPage);
-      }
-    } catch (err) {
-      setError('Failed to fetch blogs. Please try again later.');
-      console.error('Error fetching blogs:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [selectedBlog, setSelectedBlog] = useState(null);
 
   useEffect(() => {
     fetchBlogs(currentPage);
   }, [currentPage]);
-
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  };
 
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPages) {
@@ -62,30 +40,14 @@ export default function Blogs() {
     fetchBlogs(currentPage);
   };
 
-  // Function to handle edit button click
   const handleEditClick = (blog) => {
     setSelectedBlog(blog);
     setShowEditModal(true);
   };
 
-  // Function to handle delete button click
   const handleDeleteClick = async (blogId) => {
     if (window.confirm('Are you sure you want to delete this blog?')) {
-      try {
-        setLoading(true);
-        const response = await api.delete(`/api/delete-blog/${blogId}`);
-        
-        if (response.data.status === 200) {
-          // Refresh blogs after deletion
-          fetchBlogs(currentPage);
-          alert('Blog deleted successfully!');
-        }
-      } catch (err) {
-        console.error('Error deleting blog:', err);
-        alert('Failed to delete blog. Please try again.');
-      } finally {
-        setLoading(false);
-      }
+      await deleteBlog(blogId);
     }
   };
 
@@ -138,7 +100,7 @@ export default function Blogs() {
           </div>
           <button
             onClick={() => setShowAddModal(true)}
-            className="bg-linear-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-105 flex items-center space-x-2 shadow-lg"
+            className="bg-linear-to-r from-primary to-secondary text-white px-6 py-3 rounded-lg transition-all duration-200 transform hover:scale-105 active:scale-95 flex items-center space-x-2 shadow-lg cursor-pointer"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -149,7 +111,7 @@ export default function Blogs() {
 
         {/* Blogs Grid */}
         {blogs.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-12">
             {blogs.map((blog) => (
               <article 
                 key={blog.id}

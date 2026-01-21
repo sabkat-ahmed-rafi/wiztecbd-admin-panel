@@ -1,18 +1,20 @@
 import { useState } from 'react';
-import api from '../../config/axiosConfig';
+import { useBlogs } from '../../Hooks/useBlogs';
 import MultiSelect from './MultiSelect';
 import toast from 'react-hot-toast';
 
-
 export default function AddBlogModal({ isOpen, onClose, onBlogAdded }) {
+  const { createBlog, loading: hookLoading } = useBlogs();
+
   const [formData, setFormData] = useState({
     title: '',
     content: '',
     readTime: 5,
     expertiseIDs: [],
-    image: null // This will store the File object
+    image: null
   });
-  const [availableExpertises, setAvailableExpertises] = useState([
+
+  const [availableExpertises] = useState([
     { id: 1, name: 'Web Development' },
     { id: 2, name: 'Mobile Development' },
     { id: 3, name: 'Data Science' },
@@ -22,6 +24,7 @@ export default function AddBlogModal({ isOpen, onClose, onBlogAdded }) {
     { id: 7, name: 'Cloud Computing' },
     { id: 8, name: 'Cybersecurity' }
   ]);
+
   const [imagePreview, setImagePreview] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -45,20 +48,17 @@ export default function AddBlogModal({ isOpen, onClose, onBlogAdded }) {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Validate file type
       if (!file.type.startsWith('image/')) {
         setError('Please select a valid image file');
         return;
       }
 
-      // Create preview
       const reader = new FileReader();
       reader.onload = (e) => {
         setImagePreview(e.target.result);
       };
       reader.readAsDataURL(file);
 
-      // Store the File object directly
       setFormData(prev => ({
         ...prev,
         image: file
@@ -76,105 +76,41 @@ export default function AddBlogModal({ isOpen, onClose, onBlogAdded }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Validation
-    if (!formData.title.trim()) {
-      setError('Title is required');
-      toast.error('Title is required');
-      return;
-    }
-    if (!formData.content.trim()) {
-      setError('Content is required');
-      toast.error('Content is required');
-      return;
-    }
-    if (formData.readTime < 1) {
-      setError('Read time must be at least 1 minute');
-      toast.error('Read time must be at least 1 minute');
-      return;
+
+    setLoading(true);
+    setError('');
+    setSuccess('');
+
+    const result = await createBlog(formData);
+
+    if (result.success) {
+      setSuccess('Blog created successfully!');
+
+      setFormData({
+        title: '',
+        content: '',
+        readTime: 5,
+        expertiseIDs: [],
+        image: null
+      });
+      setImagePreview(null);
+
+      if (onBlogAdded) {
+        onBlogAdded();
+      }
+
+      setTimeout(() => {
+        onClose();
+      }, 1500);
+    } else {
+      setError(result.error);
     }
 
-    try {
-      setLoading(true);
-      setError('');
-      setSuccess('');
-      
-      // Create FormData object
-      const formDataToSend = new FormData();
-      
-      // Append text fields
-      formDataToSend.append('title', formData.title);
-      formDataToSend.append('content', formData.content);
-      formDataToSend.append('readTime', formData.readTime.toString());
-      
-      // Append expertiseIDs as JSON string
-      if (formData.expertiseIDs.length > 0) {
-        formDataToSend.append('expertiseIDs', JSON.stringify(formData.expertiseIDs));
-      }
-      
-      // Append image file if exists
-      if (formData.image instanceof File) {
-        formDataToSend.append('image', formData.image);
-      }
-      
-    
-      
-      // Send with proper headers
-      const response = await api.post(`/api/add-blog`, formDataToSend);
-      
-      console.log('API Response:', response.data);
-      
-      if (response.data.status === 200 || response.data.status === 201) {
-        setSuccess('Blog created successfully!');
-        toast.success('Blog created successfully!');
-        
-        // Reset form
-        setFormData({
-          title: '',
-          content: '',
-          readTime: 5,
-          expertiseIDs: [],
-          image: null
-        });
-        setImagePreview(null);
-        
-        // Notify parent component to refresh blogs
-        if (onBlogAdded) {
-          onBlogAdded();
-        }
-        
-        // Close modal after a short delay
-        setTimeout(() => {
-          onClose();
-        }, 1500);
-      } else {
-        // Handle unexpected response
-        const errorMsg = response.data.message || 'Failed to create blog';
-        setError(errorMsg);
-        toast.error(errorMsg);
-      }
-    } catch (err) {
-      console.error('Error creating blog:', err);
-      
-      let errorMessage = 'Failed to create blog. Please try again.';
-      
-      if (err.response?.data?.message) {
-        errorMessage = err.response.data.message;
-      } else if (err.response?.data?.error) {
-        errorMessage = err.response.data.error;
-      } else if (err.message) {
-        errorMessage = err.message;
-      }
-      
-      setError(errorMessage);
-      toast.error(errorMessage);
-    } finally {
-      setLoading(false);
-    }
+    setLoading(false);
   };
 
   const handleClose = () => {
-    if (!loading) {
+    if (!loading && !hookLoading) {
       setFormData({
         title: '',
         content: '',

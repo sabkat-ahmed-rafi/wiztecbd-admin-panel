@@ -111,7 +111,7 @@ export default function AddBlogModal({ isOpen, onClose, onBlogAdded }) {
   };
 
   const handleClose = () => {
-    if (!loading && !hookLoading) {
+    if (!loading) {
       setFormData({
         title: '',
         content: '',

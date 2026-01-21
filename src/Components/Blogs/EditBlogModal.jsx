@@ -118,7 +118,7 @@ export default function EditBlogModal({ isOpen, onClose, onBlogUpdated, blog }) 
   };
 
   const handleClose = () => {
-    if (!loading && !hookLoading) {
+    if (!loading) {
       setFormData({
         title: '',
         content: '',

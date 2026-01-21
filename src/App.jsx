@@ -8,10 +8,12 @@ import Login from './Components/Auth/Login';
 import ProtectedRoute from './Components/Auth/ProtectedRoute';
 import Signup from './Components/Auth/Signup';
 import SmoothFollower from './Components/animation/SmoothFollower';
+import { Toaster } from 'react-hot-toast';
 
 function App() {
   return (
     <Router>
+      <Toaster />
       <SmoothFollower />
       <Routes>
         <Route path="/login" element={<Login />} />

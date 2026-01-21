@@ -3,6 +3,7 @@ import { useBlogs } from '../../Hooks/useBlogs';
 import AddBlogModal from './AddBlogModal';
 import EditBlogModal from './EditBlogModal';
 import BlogModal from './BlogModal';
+import Swal from 'sweetalert2';
 
 export default function Blogs() {
   const {
@@ -59,7 +60,18 @@ export default function Blogs() {
   };
 
   const handleDeleteClick = async (blogId) => {
-    if (window.confirm('Are you sure you want to delete this blog?')) {
+    const result = await Swal.fire({
+      title: 'Delete Blog?',
+      text: 'This action cannot be undone.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#6b7280',
+      confirmButtonText: 'Yes, delete it',
+      cancelButtonText: 'Cancel'
+    });
+
+    if (result.isConfirmed) {
       await deleteBlog(blogId);
     }
   };

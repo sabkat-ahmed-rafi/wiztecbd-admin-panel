@@ -2,9 +2,10 @@ import { useState, useEffect } from 'react';
 import { useBlogs } from '../../Hooks/useBlogs';
 import MultiSelect from './MultiSelect';
 import RichTextEditor from '../../utils/RichTextEditor';
+import toast from 'react-hot-toast';
 
 export default function EditBlogModal({ isOpen, onClose, onBlogUpdated, blog }) {
-  const { updateBlog, loading: hookLoading } = useBlogs();
+  const { updateBlog } = useBlogs();
 
   const [formData, setFormData] = useState({
     title: '',
@@ -28,8 +29,6 @@ export default function EditBlogModal({ isOpen, onClose, onBlogUpdated, blog }) 
 
   const [imagePreview, setImagePreview] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
 
   useEffect(() => {
     if (blog) {
@@ -95,13 +94,10 @@ export default function EditBlogModal({ isOpen, onClose, onBlogUpdated, blog }) 
     e.preventDefault();
 
     setLoading(true);
-    setError('');
-    setSuccess('');
 
     const result = await updateBlog(blog.id, formData);
 
     if (result.success) {
-      setSuccess('Blog updated successfully!');
 
       if (onBlogUpdated) {
         onBlogUpdated();
@@ -112,7 +108,6 @@ export default function EditBlogModal({ isOpen, onClose, onBlogUpdated, blog }) 
         handleClose();
       }, 1500);
     } else {
-      setError(result.error);
       setLoading(false);
     }
   };
@@ -128,8 +123,6 @@ export default function EditBlogModal({ isOpen, onClose, onBlogUpdated, blog }) 
         currentImage: null
       });
       setImagePreview(null);
-      setError('');
-      setSuccess('');
       onClose();
     }
   };
@@ -155,28 +148,6 @@ export default function EditBlogModal({ isOpen, onClose, onBlogUpdated, blog }) 
 
         {/* Modal Content */}
         <form onSubmit={handleSubmit} className="p-6">
-          {error && (
-            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-              <div className="flex items-center">
-                <svg className="w-5 h-5 text-red-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                </svg>
-                <span className="text-red-700">{error}</span>
-              </div>
-            </div>
-          )}
-
-          {success && (
-            <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-              <div className="flex items-center">
-                <svg className="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-                <span className="text-green-700">{success}</span>
-              </div>
-            </div>
-          )}
-
           <div className="space-y-6">
             {/* Title Input */}
             <div>
@@ -201,7 +172,6 @@ export default function EditBlogModal({ isOpen, onClose, onBlogUpdated, blog }) 
                 value={formData.content}
                 onChange={(value) => setFormData(prev => ({ ...prev, content: value }))}
                 label="Blog Content *"
-                error={!formData.content.trim() && error ? 'Content is required' : null}
                 minHeight="300px"
               />
             </div>

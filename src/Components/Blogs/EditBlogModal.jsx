@@ -145,7 +145,7 @@ export default function EditBlogModal({ isOpen, onClose, onBlogUpdated, blog }) 
           <button
             onClick={handleClose}
             disabled={loading}
-            className="text-gray-400 hover:text-gray-600 transition-colors duration-200 disabled:opacity-50"
+            className="text-gray-400 hover:text-gray-600 disabled:opacity-50 cursor-pointer"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -190,7 +190,7 @@ export default function EditBlogModal({ isOpen, onClose, onBlogUpdated, blog }) 
                 value={formData.title}
                 onChange={handleInputChange}
                 disabled={loading}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200 disabled:opacity-50"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg  focus:outline-none focus:border-primary disabled:opacity-50"
                 placeholder="Enter an engaging title for your blog..."
               />
             </div>
@@ -219,7 +219,7 @@ export default function EditBlogModal({ isOpen, onClose, onBlogUpdated, blog }) 
                 onChange={handleInputChange}
                 disabled={loading}
                 min="1"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200 disabled:opacity-50"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-primary disabled:opacity-50"
                 placeholder="5"
               />
             </div>
@@ -229,7 +229,7 @@ export default function EditBlogModal({ isOpen, onClose, onBlogUpdated, blog }) 
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Blog Image (Optional)
               </label>
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-indigo-400 transition-colors duration-200">
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-primary">
                 {imagePreview ? (
                   <div className="relative">
                     <img 
@@ -255,7 +255,7 @@ export default function EditBlogModal({ isOpen, onClose, onBlogUpdated, blog }) 
                     </div>
                     <div>
                       <label className="cursor-pointer">
-                        <span className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors duration-200">
+                        <span className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary">
                           {formData.currentImage ? 'Change Image' : 'Choose Image'}
                         </span>
                         <input
@@ -297,14 +297,14 @@ export default function EditBlogModal({ isOpen, onClose, onBlogUpdated, blog }) 
               type="button"
               onClick={handleClose}
               disabled={loading}
-              className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200 disabled:opacity-50"
+              className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 duration-200 disabled:opacity-50 hover:scale-105 active:scale-95 transition-transform cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-200 disabled:opacity-50 flex items-center"
+              className="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary duration-200 disabled:opacity-50 flex items-center hover:scale-105 active:scale-95 transition-transform cursor-pointer"
             >
               {loading ? (
                 <>

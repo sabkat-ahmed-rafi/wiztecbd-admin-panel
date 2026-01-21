@@ -136,7 +136,7 @@ export default function MultiSelect({
               placeholder="Search..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-3 py-2 border border-primary rounded-md  focus:ring-primary focus:border-primary text-sm"
+              className="w-full px-3 py-2 border border-primary rounded-md focus:outline-none focus:ring-primary focus:border-primary text-sm"
               onClick={(e) => e.stopPropagation()}
               autoFocus
             />

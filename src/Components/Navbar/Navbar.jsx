@@ -20,7 +20,7 @@ export default function Navbar({ className }) {
           className="btn"
         >
            
-          <i class="animation"></i>Log Out<i class="animation"></i>
+          <i className="animation"></i>Log Out<i className="animation"></i>
         </button>
         </div>
       </div>

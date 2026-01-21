@@ -1,16 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import api from '../../config/axiosConfig';
 import MultiSelect from './MultiSelect';
-import toast from 'react-hot-toast';
 
-
-export default function AddBlogModal({ isOpen, onClose, onBlogAdded }) {
+export default function EditBlogModal({ isOpen, onClose, onBlogUpdated, blog }) {
   const [formData, setFormData] = useState({
     title: '',
     content: '',
     readTime: 5,
     expertiseIDs: [],
-    image: null // This will store the File object
+    image: null,
+    currentImage: null
   });
   const [availableExpertises, setAvailableExpertises] = useState([
     { id: 1, name: 'Web Development' },
@@ -26,6 +25,21 @@ export default function AddBlogModal({ isOpen, onClose, onBlogAdded }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+
+  // Initialize form data when blog prop changes
+  useEffect(() => {
+    if (blog) {
+      setFormData({
+        title: blog.title || '',
+        content: blog.content || '',
+        readTime: blog.readTime || 5,
+        expertiseIDs: blog.expertiseIDs || [],
+        image: null, // New image file (if changed)
+        currentImage: blog.image // Current image URL/path
+      });
+      setImagePreview(blog.image || null);
+    }
+  }, [blog]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -51,7 +65,6 @@ export default function AddBlogModal({ isOpen, onClose, onBlogAdded }) {
         return;
       }
 
-      // Create preview
       const reader = new FileReader();
       reader.onload = (e) => {
         setImagePreview(e.target.result);
@@ -63,6 +76,7 @@ export default function AddBlogModal({ isOpen, onClose, onBlogAdded }) {
         ...prev,
         image: file
       }));
+
     }
   };
 
@@ -70,7 +84,8 @@ export default function AddBlogModal({ isOpen, onClose, onBlogAdded }) {
     setImagePreview(null);
     setFormData(prev => ({
       ...prev,
-      image: null
+      image: null,
+      currentImage: null // Remove both new and current image
     }));
   };
 
@@ -80,17 +95,14 @@ export default function AddBlogModal({ isOpen, onClose, onBlogAdded }) {
     // Validation
     if (!formData.title.trim()) {
       setError('Title is required');
-      toast.error('Title is required');
       return;
     }
     if (!formData.content.trim()) {
       setError('Content is required');
-      toast.error('Content is required');
       return;
     }
     if (formData.readTime < 1) {
       setError('Read time must be at least 1 minute');
-      toast.error('Read time must be at least 1 minute');
       return;
     }
 
@@ -99,75 +111,41 @@ export default function AddBlogModal({ isOpen, onClose, onBlogAdded }) {
       setError('');
       setSuccess('');
       
-      // Create FormData object
-      const formDataToSend = new FormData();
+      // Create FormData for file upload
+      const submitData = new FormData();
+      submitData.append('title', formData.title);
+      submitData.append('content', formData.content);
+      submitData.append('readTime', formData.readTime);
+      submitData.append('expertiseIDs', JSON.stringify(formData.expertiseIDs));
       
-      // Append text fields
-      formDataToSend.append('title', formData.title);
-      formDataToSend.append('content', formData.content);
-      formDataToSend.append('readTime', formData.readTime.toString());
-      
-      // Append expertiseIDs as JSON string
-      if (formData.expertiseIDs.length > 0) {
-        formDataToSend.append('expertiseIDs', JSON.stringify(formData.expertiseIDs));
+      // Only append image if it's a new file
+      if (formData.image) {
+        submitData.append('image', formData.image);
       }
       
-      // Append image file if exists
-      if (formData.image instanceof File) {
-        formDataToSend.append('image', formData.image);
+      // Append a flag if we removed the image
+      if (!formData.image && !formData.currentImage && imagePreview === null) {
+        submitData.append('removeImage', 'true');
       }
-      
-    
-      
-      // Send with proper headers
-      const response = await api.post(`/api/add-blog`, formDataToSend);
-      
-      console.log('API Response:', response.data);
+
+      const response = await api.put(`/api/update-blog/${blog.id}`, submitData);
       
       if (response.data.status === 200 || response.data.status === 201) {
-        setSuccess('Blog created successfully!');
-        toast.success('Blog created successfully!');
-        
-        // Reset form
-        setFormData({
-          title: '',
-          content: '',
-          readTime: 5,
-          expertiseIDs: [],
-          image: null
-        });
-        setImagePreview(null);
+        setSuccess('Blog updated successfully!');
         
         // Notify parent component to refresh blogs
-        if (onBlogAdded) {
-          onBlogAdded();
+        if (onBlogUpdated) {
+          onBlogUpdated();
         }
         
         // Close modal after a short delay
         setTimeout(() => {
-          onClose();
+          handleClose();
         }, 1500);
-      } else {
-        // Handle unexpected response
-        const errorMsg = response.data.message || 'Failed to create blog';
-        setError(errorMsg);
-        toast.error(errorMsg);
       }
     } catch (err) {
-      console.error('Error creating blog:', err);
-      
-      let errorMessage = 'Failed to create blog. Please try again.';
-      
-      if (err.response?.data?.message) {
-        errorMessage = err.response.data.message;
-      } else if (err.response?.data?.error) {
-        errorMessage = err.response.data.error;
-      } else if (err.message) {
-        errorMessage = err.message;
-      }
-      
-      setError(errorMessage);
-      toast.error(errorMessage);
+      setError(err.response?.data?.message || 'Failed to update blog. Please try again.');
+      console.error('Error updating blog:', err);
     } finally {
       setLoading(false);
     }
@@ -180,7 +158,8 @@ export default function AddBlogModal({ isOpen, onClose, onBlogAdded }) {
         content: '',
         readTime: 5,
         expertiseIDs: [],
-        image: null
+        image: null,
+        currentImage: null
       });
       setImagePreview(null);
       setError('');
@@ -189,14 +168,14 @@ export default function AddBlogModal({ isOpen, onClose, onBlogAdded }) {
     }
   };
 
-  if (!isOpen) return null;
+  if (!isOpen || !blog) return null;
 
   return (
     <div className="fixed inset-0 backdrop-blur-xs bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         {/* Modal Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <h2 className="text-2xl font-bold text-gray-800">Create New Blog</h2>
+          <h2 className="text-2xl font-bold text-gray-800">Edit Blog</h2>
           <button
             onClick={handleClose}
             disabled={loading}
@@ -247,7 +226,6 @@ export default function AddBlogModal({ isOpen, onClose, onBlogAdded }) {
                 disabled={loading}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200 disabled:opacity-50"
                 placeholder="Enter an engaging title for your blog..."
-                required
               />
             </div>
 
@@ -265,7 +243,6 @@ export default function AddBlogModal({ isOpen, onClose, onBlogAdded }) {
                 rows="8"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200 disabled:opacity-50 resize-none"
                 placeholder="Write your blog content here..."
-                required
               />
             </div>
 
@@ -284,7 +261,6 @@ export default function AddBlogModal({ isOpen, onClose, onBlogAdded }) {
                 min="1"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200 disabled:opacity-50"
                 placeholder="5"
-                required
               />
             </div>
 
@@ -319,8 +295,8 @@ export default function AddBlogModal({ isOpen, onClose, onBlogAdded }) {
                     </div>
                     <div>
                       <label className="cursor-pointer">
-                        <span className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors duration-200 disabled:opacity-50">
-                          Choose Image
+                        <span className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors duration-200">
+                          {formData.currentImage ? 'Change Image' : 'Choose Image'}
                         </span>
                         <input
                           type="file"
@@ -331,12 +307,17 @@ export default function AddBlogModal({ isOpen, onClose, onBlogAdded }) {
                         />
                       </label>
                       <p className="mt-2 text-sm text-gray-500">
-                        PNG, JPG, GIF (Max 5MB)
+                        PNG, JPG, GIF
                       </p>
                     </div>
                   </div>
                 )}
               </div>
+              {formData.currentImage && !imagePreview && (
+                <p className="mt-2 text-sm text-gray-500">
+                  Current image will be kept if no new image is selected
+                </p>
+              )}
             </div>
 
             {/* Expertise Selection */}
@@ -371,10 +352,10 @@ export default function AddBlogModal({ isOpen, onClose, onBlogAdded }) {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  Creating...
+                  Updating...
                 </>
               ) : (
-                'Create Blog'
+                'Update Blog'
               )}
             </button>
           </div>

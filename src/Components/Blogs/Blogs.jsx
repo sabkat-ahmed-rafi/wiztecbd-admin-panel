@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import api from '../../config/axiosConfig';
 import { Link } from 'react-router-dom';
 import AddBlogModal from './AddBlogModal';
+import EditBlogModal from './EditBlogModal'; // Import the EditBlogModal
 
 export default function Blogs() {
   const [blogs, setBlogs] = useState([]);
@@ -11,6 +12,8 @@ export default function Blogs() {
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedBlog, setSelectedBlog] = useState(null); // State to track blog being edited
 
   const fetchBlogs = async (page = 1) => {
     try {
@@ -55,7 +58,38 @@ export default function Blogs() {
     fetchBlogs(currentPage);
   };
 
-  if (loading) {
+  const handleBlogUpdated = () => {
+    fetchBlogs(currentPage);
+  };
+
+  // Function to handle edit button click
+  const handleEditClick = (blog) => {
+    setSelectedBlog(blog);
+    setShowEditModal(true);
+  };
+
+  // Function to handle delete button click
+  const handleDeleteClick = async (blogId) => {
+    if (window.confirm('Are you sure you want to delete this blog?')) {
+      try {
+        setLoading(true);
+        const response = await api.delete(`/api/delete-blog/${blogId}`);
+        
+        if (response.data.status === 200) {
+          // Refresh blogs after deletion
+          fetchBlogs(currentPage);
+          alert('Blog deleted successfully!');
+        }
+      } catch (err) {
+        console.error('Error deleting blog:', err);
+        alert('Failed to delete blog. Please try again.');
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  if (loading && !blogs.length) {
     return (
       <div className="min-h-screen bg-linear-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
         <div className="text-center">
@@ -66,7 +100,7 @@ export default function Blogs() {
     );
   }
 
-  if (error) {
+  if (error && !blogs.length) {
     return (
       <div className="min-h-screen bg-linear-to-br from-red-50 to-pink-100 flex items-center justify-center p-4">
         <div className="text-center max-w-md">
@@ -154,8 +188,25 @@ export default function Blogs() {
                   </p>
 
                   <div className="flex items-center justify-between">
-                    <button className='bg-linear-to-r from-rose-600 to-rose-400 text-white px-2 py-1 rounded-md text-sm font-medium cursor-pointer hover:scale-105 active:scale-95 transition-transform'>Delete</button>
-                    <Link to={''} className="text-primary font-medium text-sm transition-colors duration-200">
+                    <div className="flex space-x-2">
+                      {/* Edit Button */}
+                      <button
+                        onClick={() => handleEditClick(blog)}
+                        className="bg-linear-to-r from-blue-600 to-blue-400 text-white px-3 py-1 rounded-md text-sm font-medium cursor-pointer hover:scale-105 active:scale-95 transition-transform"
+                      >
+                        Edit
+                      </button>
+                      
+                      {/* Delete Button */}
+                      <button
+                        onClick={() => handleDeleteClick(blog.id)}
+                        className="bg-linear-to-r from-rose-600 to-rose-400 text-white px-3 py-1 rounded-md text-sm font-medium cursor-pointer hover:scale-105 active:scale-95 transition-transform"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                    
+                    <Link to={`/blog/${blog.id}`} className="text-primary font-medium text-sm transition-colors duration-200">
                       Read More →
                     </Link>
                   </div>
@@ -234,6 +285,17 @@ export default function Blogs() {
           isOpen={showAddModal}
           onClose={() => setShowAddModal(false)}
           onBlogAdded={handleBlogAdded}
+        />
+
+        {/* Edit Blog Modal */}
+        <EditBlogModal
+          isOpen={showEditModal}
+          onClose={() => {
+            setShowEditModal(false);
+            setSelectedBlog(null);
+          }}
+          onBlogUpdated={handleBlogUpdated}
+          blog={selectedBlog}
         />
       </div>
     </div>

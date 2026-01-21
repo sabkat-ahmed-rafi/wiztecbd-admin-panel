@@ -101,13 +101,13 @@ export default function AddBlogModal({ isOpen, onClose, onBlogAdded }) {
       }
 
       setTimeout(() => {
+        setLoading(false);
         onClose();
       }, 1500);
     } else {
       setError(result.error);
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   const handleClose = () => {

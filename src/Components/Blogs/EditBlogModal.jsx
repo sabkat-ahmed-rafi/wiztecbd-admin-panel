@@ -108,13 +108,13 @@ export default function EditBlogModal({ isOpen, onClose, onBlogUpdated, blog }) 
       }
 
       setTimeout(() => {
+        setLoading(false);
         handleClose();
       }, 1500);
     } else {
       setError(result.error);
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   const handleClose = () => {

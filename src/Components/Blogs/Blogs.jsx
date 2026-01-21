@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { useBlogs } from '../../Hooks/useBlogs';
 import AddBlogModal from './AddBlogModal';
 import EditBlogModal from './EditBlogModal';
+import BlogModal from './BlogModal';
 
 export default function Blogs() {
   const {
@@ -20,6 +20,7 @@ export default function Blogs() {
 
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showBlogModal, setShowBlogModal] = useState(false);
   const [selectedBlog, setSelectedBlog] = useState(null);
 
   useEffect(() => {
@@ -168,9 +169,15 @@ export default function Blogs() {
                       </button>
                     </div>
                     
-                    <Link to={`/blog/${blog.id}`} className="text-primary font-medium text-sm transition-colors duration-200">
+                    <button
+                      onClick={() => {
+                        setSelectedBlog(blog);
+                        setShowBlogModal(true);
+                      }}
+                      className="text-primary font-medium text-sm transition-colors duration-200 hover:text-primary-dark"
+                    >
                       Read More →
-                    </Link>
+                    </button>
                   </div>
                 </div>
               </article>
@@ -257,6 +264,16 @@ export default function Blogs() {
             setSelectedBlog(null);
           }}
           onBlogUpdated={handleBlogUpdated}
+          blog={selectedBlog}
+        />
+
+        {/* Blog Detail Modal */}
+        <BlogModal
+          isOpen={showBlogModal}
+          onClose={() => {
+            setShowBlogModal(false);
+            setSelectedBlog(null);
+          }}
           blog={selectedBlog}
         />
       </div>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { stripHtmlTags } from '../../utils/stripHtmlTags';
 import { useBlogs } from '../../Hooks/useBlogs';
 import AddBlogModal from './AddBlogModal';
 import EditBlogModal from './EditBlogModal';
@@ -23,18 +24,6 @@ export default function Blogs() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showBlogModal, setShowBlogModal] = useState(false);
   const [selectedBlog, setSelectedBlog] = useState(null);
-
-  // Helper function to strip HTML tags and get plain text
-  const stripHtmlTags = (html) => {
-    if (!html) return '';
-    return html
-      .replace(/<[^>]*>/g, '') // Remove all HTML tags
-      .replace(/&nbsp;/g, ' ') // Replace non-breaking spaces
-      .replace(/&lt;/g, '<')   // Decode HTML entities
-      .replace(/&gt;/g, '>')
-      .replace(/&amp;/g, '&')
-      .trim();
-  };
 
   useEffect(() => {
     fetchBlogs(currentPage);

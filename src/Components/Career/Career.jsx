@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useCareers } from '../../Hooks/useCareers';
-// import AddCareerModal from './AddCareerModal';
+import AddCareerModal from './AddCareerModal';
 // import EditCareerModal from './EditCareerModal';
 // import CareerModal from './CareerModal';
 import Swal from 'sweetalert2';
+import { stripHtmlTags } from '../../utils/stripHtmlTags';
 
 export default function Careers() {
   const {
@@ -230,7 +231,7 @@ export default function Careers() {
                   </div>
 
                   <p className="text-gray-600 mb-4 line-clamp-3 grow">
-                    {career.details}
+                    {stripHtmlTags(career.details)}
                   </p>
 
                   <div className="flex items-center justify-between mt-auto pt-4 border-t border-gray-100">
@@ -295,12 +296,12 @@ export default function Careers() {
         )}
 
         {/* Add Career Modal */}
-        {/* <AddCareerModal
+        <AddCareerModal
           isOpen={showAddModal}
           onClose={() => setShowAddModal(false)}
           onCareerAdded={handleCareerAdded}
           loading={loading}
-        /> */}
+        />
 
         {/* Edit Career Modal */}
         {/* <EditCareerModal

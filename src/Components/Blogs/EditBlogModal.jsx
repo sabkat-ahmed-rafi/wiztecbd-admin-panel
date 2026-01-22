@@ -175,7 +175,7 @@ export default function EditBlogModal({ isOpen, onClose, onBlogUpdated, blog, lo
               onRemove={handleImageRemove}
               label="Blog Image"
               disabled={loading}
-              currentImage={formData.currentImage}
+              currentImage={blog.image}
               showCurrentImageNote={true}
             />
 

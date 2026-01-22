@@ -10,7 +10,7 @@ export default function CareerModal({ isOpen, onClose, career }) {
   if (!isOpen || !career) return null;
 
   return (
-    <div className="fixed inset-0 bg-linear-to-br from-gray-900/60 to-black/60 backdrop-blur-xl flex items-center justify-center p-3 sm:p-4 z-50">
+    <div className="fixed inset-0 bg-linear-to-br from-gray-900/60 to-black/60 backdrop-blur-xl flex items-center justify-center z-50">
       {/* Close on background click */}
       <div
         className="absolute inset-0"
@@ -19,7 +19,7 @@ export default function CareerModal({ isOpen, onClose, career }) {
       ></div>
 
       {/* Modal Container */}
-      <div className="relative bg-white rounded-3xl shadow-2xl w-full max-h-[95vh] sm:max-h-[90vh] max-w-3xl lg:max-w-5xl overflow-hidden flex flex-col border border-gray-200">
+      <div className="relative bg-white shadow-2xl w-full max-h-full h-full max-w-full overflow-hidden flex flex-col border border-gray-200">
         {/* linear Header */}
         <div className="shrink-0 bg-linear-to-r from-primary via-primary/90 to-secondary p-4 sm:p-6">
           <div className="flex items-center justify-between">
@@ -28,7 +28,7 @@ export default function CareerModal({ isOpen, onClose, career }) {
                 <MdWork className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
               </div>
               <div>
-                <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white pr-4">
+                <h2 className="md:text-2xl text-lg  font-bold text-white pr-4">
                   {career.title}
                 </h2>
                 <p className="text-white/80 text-sm sm:text-base mt-1">Career Opportunity Details</p>
@@ -240,16 +240,29 @@ export default function CareerModal({ isOpen, onClose, career }) {
         <div className="shrink-0 bg-linear-to-r from-gray-50 to-white border-t border-gray-100 px-4 sm:px-6 py-4">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 flex items-center justify-center bg-linear-to-r from-primary to-secondary rounded-lg">
+             <div className="w-8 h-8 flex items-center justify-center bg-linear-to-r from-primary to-secondary rounded-lg">
                 <MdWork className="w-4 h-4 text-white" />
               </div>
               <div>
-                <p className="text-xs font-medium text-gray-600">Career ID</p>
-                <p className="text-sm font-bold text-gray-900">#{career.id}</p>
+                <p className="text-sm font-medium text-gray-600">Career ID: #{career.id}</p>
+                <p className="text-xs text-gray-500">
+                  Last updated: {new Date(career.updatedAt || career.createdAt).toLocaleDateString('en-US', { 
+                    month: 'short', 
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  })}
+                </p>
               </div>
             </div>
             
             <div className="flex items-center space-x-3">
+              <button
+                onClick={onClose}
+                className="px-6 py-3 text-xs md:text-base bg-linear-to-r from-gray-200 to-gray-300 text-gray-800 font-medium rounded-xl hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5 hover:scale-105 cursor-pointer active:scale-95"
+              >
+                Close Preview
+              </button>
               <button
                 onClick={() => window.open(career.applyLink, '_blank')}
                 className="px-6 py-3 text-xs md:text-base bg-linear-to-r from-secondary to-primary text-white font-medium rounded-xl hover:shadow-lg hover:shadow-secondary-500/25 transition-all duration-300 transform hover:-translate-y-0.5 hover:scale-105 cursor-pointer active:scale-95"
@@ -260,12 +273,6 @@ export default function CareerModal({ isOpen, onClose, career }) {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                   </svg>
                 </span>
-              </button>
-              <button
-                onClick={onClose}
-                className="px-6 py-3 text-xs md:text-base bg-linear-to-r from-gray-200 to-gray-300 text-gray-800 font-medium rounded-xl hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5 hover:scale-105 cursor-pointer active:scale-95"
-              >
-                Close Preview
               </button>
             </div>
           </div>

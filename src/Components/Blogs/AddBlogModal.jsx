@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useBlogs } from '../../Hooks/useBlogs';
-import MultiSelect from './MultiSelect';
+import MultiSelect from '../../utils/MultiSelect';
 import RichTextEditor from '../../utils/RichTextEditor';
 
 export default function AddBlogModal({ isOpen, onClose, onBlogAdded, loading }) {

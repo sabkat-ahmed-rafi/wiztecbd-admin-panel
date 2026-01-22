@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useBlogs } from '../../Hooks/useBlogs';
-import MultiSelect from './MultiSelect';
+import MultiSelect from '../../utils/MultiSelect';
 import RichTextEditor from '../../utils/RichTextEditor';
 import toast from 'react-hot-toast';
 

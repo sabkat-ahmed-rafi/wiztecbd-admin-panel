@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useCareers } from '../../Hooks/useCareers';
 import AddCareerModal from './AddCareerModal';
 import EditCareerModal from './EditCareerModal';
-// import CareerModal from './CareerModal';
+import CareerModal from './CareerModal';
 import Swal from 'sweetalert2';
 import { stripHtmlTags } from '../../utils/stripHtmlTags';
 
@@ -316,14 +316,14 @@ export default function Careers() {
         />
 
         {/* Career Detail Modal */}
-        {/* <CareerModal
+        <CareerModal
           isOpen={showCareerModal}
           onClose={() => {
             setShowCareerModal(false);
             setSelectedCareer(null);
           }}
           career={selectedCareer}
-        /> */}
+        />
       </div>
     </div>
   );

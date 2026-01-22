@@ -1,10 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useBlogs } from '../../Hooks/useBlogs';
 import MultiSelect from '../../utils/MultiSelect';
 import RichTextEditor from '../../utils/RichTextEditor';
 import ImageUpload from '../../utils/ImageUpload';
 import { MdTitle, MdAccessTime, MdAdd, MdEditNote } from "react-icons/md";
-import { FaBlog } from "react-icons/fa";
 
 export default function AddBlogModal({ isOpen, onClose, onBlogAdded, loading }) {
   const { createBlog } = useBlogs();
@@ -90,6 +89,19 @@ export default function AddBlogModal({ isOpen, onClose, onBlogAdded, loading }) 
       onClose();
     }
   };
+
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.classList.add('overflow-hidden');
+    } else {
+      document.body.classList.remove('overflow-hidden');
+    }
+    
+    return () => {
+      document.body.classList.remove('overflow-hidden');
+    };
+  }, [isOpen]);
 
   if (!isOpen) return null;
 

@@ -3,9 +3,24 @@ import { BsCalendarDate } from "react-icons/bs";
 import { FaMapMarkerAlt, FaUsers, FaUserTie, FaLink, FaGenderless } from "react-icons/fa";
 import { MdWork, MdCategory } from "react-icons/md";
 import { HiOutlineDocumentText } from "react-icons/hi";
+import { useEffect } from 'react';
 
 export default function CareerModal({ isOpen, onClose, career }) {
   const { formatDate } = useCareers();
+
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.classList.add('overflow-hidden');
+    } else {
+      document.body.classList.remove('overflow-hidden');
+    }
+    
+    return () => {
+      document.body.classList.remove('overflow-hidden');
+    };
+  }, [isOpen]);
+
 
   if (!isOpen || !career) return null;
 

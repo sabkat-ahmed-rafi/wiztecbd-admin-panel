@@ -157,6 +157,20 @@ export default function EditCareerModal({ isOpen, onClose, onCareerUpdated, care
     }
   };
 
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.classList.add('overflow-hidden');
+    } else {
+      document.body.classList.remove('overflow-hidden');
+    }
+    
+    return () => {
+      document.body.classList.remove('overflow-hidden');
+    };
+  }, [isOpen]);
+
+
   if (!isOpen || !career) return null;
 
   return (

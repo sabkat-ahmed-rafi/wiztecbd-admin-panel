@@ -2,11 +2,10 @@ import { useBlogs } from '../../Hooks/useBlogs';
 import { BsCalendarDate } from "react-icons/bs";
 import { MdAccessTime } from "react-icons/md";
 import { FaBlog } from "react-icons/fa";
+import { useEffect } from 'react';
 
 export default function BlogModal({ isOpen, onClose, blog }) {
   const { formatDate } = useBlogs();
-
-  if (!isOpen || !blog) return null;
 
   // Map expertise IDs to names
   const expertiseMap = {
@@ -19,6 +18,20 @@ export default function BlogModal({ isOpen, onClose, blog }) {
     7: 'Cloud Computing',
     8: 'Cybersecurity'
   };
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.classList.add('overflow-hidden');
+    } else {
+      document.body.classList.remove('overflow-hidden');
+    }
+    
+    return () => {
+      document.body.classList.remove('overflow-hidden');
+    };
+  }, [isOpen]);
+  
+  if (!isOpen || !blog) return null;
 
   return (
     <div className="fixed inset-0 bg-linear-to-br from-gray-900/70 to-black/70 backdrop-blur-xl flex items-center justify-center z-50">

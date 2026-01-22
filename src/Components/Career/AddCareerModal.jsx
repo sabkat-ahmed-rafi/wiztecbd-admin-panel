@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useCareers } from '../../Hooks/useCareers';
 import MultiSelect from '../../utils/MultiSelect';
 import RichTextEditor from '../../utils/RichTextEditor';
@@ -145,6 +145,19 @@ export default function AddCareerModal({ isOpen, onClose, onCareerAdded, loading
       onClose();
     }
   };
+
+
+    useEffect(() => {
+      if (isOpen) {
+        document.body.classList.add('overflow-hidden');
+      } else {
+        document.body.classList.remove('overflow-hidden');
+      }
+      
+      return () => {
+        document.body.classList.remove('overflow-hidden');
+      };
+    }, [isOpen]);
 
   if (!isOpen) return null;
 

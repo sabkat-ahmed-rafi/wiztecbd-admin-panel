@@ -3,7 +3,7 @@ import { useBlogs } from '../../Hooks/useBlogs';
 import MultiSelect from '../../utils/MultiSelect';
 import RichTextEditor from '../../utils/RichTextEditor';
 import ImageUpload from '../../utils/ImageUpload';
-import { MdTitle, MdAccessTime, MdEdit } from "react-icons/md";
+import { MdTitle, MdAccessTime } from "react-icons/md";
 import { FaBlog, FaEdit } from "react-icons/fa";
 
 export default function EditBlogModal({ isOpen, onClose, onBlogUpdated, blog, loading }) {
@@ -102,6 +102,20 @@ export default function EditBlogModal({ isOpen, onClose, onBlogUpdated, blog, lo
       onClose();
     }
   };
+
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.classList.add('overflow-hidden');
+    } else {
+      document.body.classList.remove('overflow-hidden');
+    }
+    
+    return () => {
+      document.body.classList.remove('overflow-hidden');
+    };
+  }, [isOpen]);
+
 
   if (!isOpen || !blog) return null;
 

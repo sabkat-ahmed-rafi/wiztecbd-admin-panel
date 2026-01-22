@@ -2,7 +2,7 @@ import { useState } from 'react';
 import api from '../config/axiosConfig';
 import toast from 'react-hot-toast';
 
-export const useCareer = () => {
+export const useCareers = () => {
   const [careers, setCareers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

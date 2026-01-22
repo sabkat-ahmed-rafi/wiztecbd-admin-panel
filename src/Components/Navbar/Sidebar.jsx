@@ -1,12 +1,14 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import { 
-  FaChartBar,      // Dashboard icon
-  FaBlog,          // Blogs icon
-  FaEnvelope,      // Enquiries icon
-  FaBars,          // Hamburger menu
-  FaTimes          // Close menu
+  FaChartBar,      
+  FaBlog,         
+  FaEnvelope,      
+  FaBars,          
+  FaTimes          
 } from 'react-icons/fa';
+import { IoBriefcaseOutline } from "react-icons/io5";
+
 
 export default function Sidebar({ className }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -35,11 +37,11 @@ export default function Sidebar({ className }) {
               to="/dashboard"
               className={`flex items-center p-2 rounded-lg transition-colors duration-200 ${
                 isActive('/dashboard')
-                  ? 'bg-[#ecfbda] text-[#6ab40a] border-l-4 border-[#8bc43f] font-medium'
+                  ? 'bg-[#ecfbda] text-primary border-l-4 border-secondary font-medium'
                   : 'hover:bg-gray-200'
               } ${
                 isActive('/')
-                  ? 'bg-[#ecfbda] text-[#6ab40a] border-l-4 border-[#8bc43f] font-medium'
+                  ? 'bg-[#ecfbda] text-primary border-l-4 border-secondary font-medium'
                   : ''
               } `}
             >
@@ -52,7 +54,7 @@ export default function Sidebar({ className }) {
               to="/blogs"
               className={`flex items-center p-2 rounded-lg transition-colors duration-200 ${
                 isActive('/blogs')
-                  ? 'bg-[#ecfbda] text-[#8bc43f] border-l-4 border-[#8bc43f] font-medium'
+                  ? 'bg-[#ecfbda] text-secondary border-l-4 border-secondary font-medium'
                   : 'hover:bg-gray-200'
               }`}
             >
@@ -65,12 +67,25 @@ export default function Sidebar({ className }) {
               to="/enquiries"
               className={`flex items-center p-2 rounded-lg transition-colors duration-200 ${
                 isActive('/enquiries')
-                  ? 'bg-[#ecfbda] text-[#8bc43f] border-l-4 border-[#8bc43f] font-medium'
+                  ? 'bg-[#ecfbda] text-secondary border-l-4 border-secondary font-medium'
                   : 'hover:bg-gray-200'
               }`}
             >
               <FaEnvelope className="mr-3" size={20} />
               <span>Enquiries</span>
+            </Link>
+          </li>
+          <li className="mb-4">
+            <Link
+              to="/career"
+              className={`flex items-center p-2 rounded-lg transition-colors duration-200 ${
+                isActive('/career')
+                  ? 'bg-[#ecfbda] text-secondary border-l-4 border-secondary font-medium'
+                  : 'hover:bg-gray-200'
+              }`}
+            >
+              <IoBriefcaseOutline className="mr-3" size={20} />
+              <span>Jobs</span>
             </Link>
           </li>
         </ul>

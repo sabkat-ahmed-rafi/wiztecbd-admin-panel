@@ -9,6 +9,7 @@ import ProtectedRoute from './Components/Auth/ProtectedRoute';
 import Signup from './Components/Auth/Signup';
 import SmoothFollower from './Components/animation/SmoothFollower';
 import { Toaster } from 'react-hot-toast';
+import Career from './Components/Career/Career';
 
 function App() {
   return (
@@ -27,9 +28,10 @@ function App() {
                 <div className="content flex-1 p-4 overflow-auto">
                   <Routes>
                     <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="" element={<Dashboard />} />
                     <Route path="/blogs" element={<Blogs />} />
                     <Route path="/enquiries" element={<Enquiries />} />
-                    <Route path="" element={<Dashboard />} />
+                    <Route path="/career" element={<Career />} />
                   </Routes>
                 </div>
               </div>

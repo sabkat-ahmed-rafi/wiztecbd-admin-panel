@@ -1,5 +1,7 @@
 import { useBlogs } from '../../Hooks/useBlogs';
 import { BsCalendarDate } from "react-icons/bs";
+import { MdAccessTime } from "react-icons/md";
+import { FaBlog } from "react-icons/fa";
 
 export default function BlogModal({ isOpen, onClose, blog }) {
   const { formatDate } = useBlogs();
@@ -19,7 +21,7 @@ export default function BlogModal({ isOpen, onClose, blog }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 z-50">
+    <div className="fixed inset-0 bg-linear-to-br from-gray-900/70 to-black/70 backdrop-blur-xl flex items-center justify-center z-50">
       {/* Close on background click */}
       <div
         className="absolute inset-0"
@@ -28,60 +30,66 @@ export default function BlogModal({ isOpen, onClose, blog }) {
       ></div>
 
       {/* Modal Container */}
-      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-h-[95vh] sm:max-h-[90vh] max-w-2xl lg:max-w-4xl overflow-hidden flex flex-col">
-        {/* Header - Fixed */}
-        <div className="shrink-0 flex items-center justify-between p-4 sm:p-6 border-b border-gray-200 bg-white">
-          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 pr-4 truncate">
-            {blog.title}
-          </h2>
-          <button
-            onClick={onClose}
-            className="shrink-0 text-gray-400 hover:text-gray-600 transition-colors duration-200 p-1 cursor-pointer"
-            aria-label="Close modal"
-          >
-            <svg className="w-6 h-6 sm:w-7 sm:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
+      <div className="relative bg-white shadow-2xl w-full max-w-full max-h-full h-full overflow-hidden flex flex-col">
+        {/* Gradient Header */}
+        <div className="shrink-0 bg-linear-to-r from-primary via-primary/90 to-secondary p-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <div className="w-12 h-12 flex items-center justify-center bg-white/20 backdrop-blur-sm rounded-xl">
+                <FaBlog className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h2 className="md:text-2xl text-lg font-bold text-white truncate max-w-md">Blog Details</h2>
+                <p className="text-white/80 text-sm mt-1 truncate max-w-md">{blog.title}</p>
+              </div>
+            </div>
+            <button
+              onClick={onClose}
+              className="shrink-0 w-10 h-10 flex items-center justify-center bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 rounded-xl transition-all duration-200 hover:scale-110 active:scale-95 cursor-pointer"
+              aria-label="Close modal"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
         </div>
 
         {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto">
-          <div className="p-4 sm:p-6 lg:p-8">
+        <div className="flex-1 overflow-y-auto p-6">
+          <div className="space-y-6">
             {/* Featured Image */}
             {blog.image && (
-              <div className="mb-6 sm:mb-8 rounded-lg overflow-hidden">
+              <div className="rounded-xl overflow-hidden border border-gray-200">
                 <img
                   src={blog.image}
                   alt={blog.title}
-                  className="w-full h-40 sm:h-56 lg:h-80 object-cover"
+                  className="w-full h-48 sm:h-64 lg:h-80 object-cover"
                 />
               </div>
             )}
 
-            {/* Meta Information */}
-            <div className="flex flex-wrap gap-3 sm:gap-4 mb-6 sm:mb-8 text-xs sm:text-sm text-gray-600">
-              <div className="flex items-center space-x-2">
-                <BsCalendarDate />
+            <h1 className='text-2xl font-bold'>{blog.title}</h1>
 
-                <span>{formatDate(blog.createdAt)}</span>
+            {/* Meta Information */}
+            <div className="flex flex-wrap gap-4">
+              <div className="flex items-center space-x-2 bg-gray-50 px-3 py-2 rounded-lg">
+                <BsCalendarDate className="w-4 h-4 text-primary" />
+                <span className="text-sm font-medium text-gray-700">{formatDate(blog.createdAt)}</span>
               </div>
-              <div className="flex items-center space-x-2">
-                <svg className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                  <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
-                </svg>
-                <span>{blog.readTime} min read</span>
+              <div className="flex items-center space-x-2 bg-gray-50 px-3 py-2 rounded-lg">
+                <MdAccessTime className="w-4 h-4 text-primary" />
+                <span className="text-sm font-medium text-gray-700">{blog.readTime} min read</span>
               </div>
             </div>
 
             {/* Expertise Tags */}
             {blog.expertiseIDs && blog.expertiseIDs.length > 0 && (
-              <div className="flex flex-wrap gap-2 mb-6 sm:mb-8">
+              <div className="flex flex-wrap gap-2">
                 {blog.expertiseIDs.map((expertiseId, index) => (
                   <span
                     key={index}
-                    className="inline-block bg-linear-to-r from-green-50 to-green-100 text-primary border border-indigo-200 text-xs sm:text-sm font-semibold px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full"
+                    className="inline-block bg-linear-to-r from-primary/20 to-secondary/20 text-primary border border-indigo-200 text-xs font-semibold px-3 py-1.5 rounded-lg"
                   >
                     {expertiseMap[expertiseId] || `Expertise ${expertiseId}`}
                   </span>
@@ -90,7 +98,7 @@ export default function BlogModal({ isOpen, onClose, blog }) {
             )}
 
             {/* Divider */}
-            <div className="border-t border-gray-200 my-6 sm:my-8"></div>
+            <div className="border-t border-gray-200 my-6"></div>
 
             {/* Blog Content - Safely render HTML */}
             <div
@@ -122,14 +130,31 @@ export default function BlogModal({ isOpen, onClose, blog }) {
           </div>
         </div>
 
-        {/* Footer - Fixed */}
-        <div className="shrink-0 bg-gray-50 border-t border-gray-200 px-4 sm:px-6 py-4 flex justify-end">
-          <button
-            onClick={onClose}
-            className="bg-linear-to-r from-primary to-secondary text-white font-medium px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg transition-all duration-200 text-sm sm:text-base hover:scale-105 active:scale-95 cursor-pointer"
-          >
-            Close
-          </button>
+        {/* Sticky Footer */}
+        <div className="sticky bottom-0 left-0 right-0 bg-linear-to-r from-white via-white to-gray-50 border-t border-gray-200 px-6 py-4 shadow-lg z-10">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 flex items-center justify-center bg-linear-to-r from-primary to-secondary rounded-lg">
+                <BsCalendarDate className="w-4 h-4 text-white" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-gray-600">Published on {formatDate(blog.createdAt)}</p>
+                <p className="text-xs text-gray-500">
+                  Blog ID: #{blog.id} • {blog.readTime} min read
+                </p>
+              </div>
+            </div>
+            
+            <div className="flex space-x-3">
+              <button
+                type="button"
+                onClick={onClose}
+                className="px-6 py-3 bg-linear-to-r text-xs md:text-base from-gray-100 to-gray-200 text-gray-800 font-medium rounded-xl hover:shadow-lg hover:shadow-gray-400/20 transition-all duration-300 transform hover:-translate-y-0.5 hover:scale-105 active:scale-95 cursor-pointer min-w-25"
+              >
+                Close
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -252,7 +252,7 @@ export default function CareerModal({ isOpen, onClose, career }) {
             <div className="flex items-center space-x-3">
               <button
                 onClick={() => window.open(career.applyLink, '_blank')}
-                className="px-6 py-3 bg-linear-to-r from-secondary to-primary text-white font-medium rounded-xl hover:shadow-lg hover:shadow-secondary-500/25 transition-all duration-300 transform hover:-translate-y-0.5 hover:scale-105 cursor-pointer active:scale-95"
+                className="px-6 py-3 text-xs md:text-base bg-linear-to-r from-secondary to-primary text-white font-medium rounded-xl hover:shadow-lg hover:shadow-secondary-500/25 transition-all duration-300 transform hover:-translate-y-0.5 hover:scale-105 cursor-pointer active:scale-95"
               >
                 <span className="flex items-center space-x-2">
                   <span>View Application Page</span>
@@ -263,7 +263,7 @@ export default function CareerModal({ isOpen, onClose, career }) {
               </button>
               <button
                 onClick={onClose}
-                className="px-6 py-3 bg-linear-to-r from-gray-200 to-gray-300 text-gray-800 font-medium rounded-xl hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5 hover:scale-105 cursor-pointer active:scale-95"
+                className="px-6 py-3 text-xs md:text-base bg-linear-to-r from-gray-200 to-gray-300 text-gray-800 font-medium rounded-xl hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5 hover:scale-105 cursor-pointer active:scale-95"
               >
                 Close Preview
               </button>

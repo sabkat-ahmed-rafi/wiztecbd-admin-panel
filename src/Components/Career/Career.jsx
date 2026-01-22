@@ -192,7 +192,7 @@ export default function Careers() {
                       {career.experience}
                     </span>
                     <span className="bg-green-100 text-green-800 text-xs font-semibold px-2.5 py-1 rounded-full">
-                      {career.vacancies} vacancy{career.vacancies > 1 ? 'ies' : ''}
+                      {career.vacancies} {career.vacancies > 1 ? 'vacancies' : 'vacancy'}
                     </span>
                   </div>
 

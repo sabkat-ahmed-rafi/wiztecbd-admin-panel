@@ -1,4 +1,5 @@
 import { useBlogs } from '../../Hooks/useBlogs';
+import { BsCalendarDate } from "react-icons/bs";
 
 export default function BlogModal({ isOpen, onClose, blog }) {
   const { formatDate } = useBlogs();
@@ -61,9 +62,8 @@ export default function BlogModal({ isOpen, onClose, blog }) {
             {/* Meta Information */}
             <div className="flex flex-wrap gap-3 sm:gap-4 mb-6 sm:mb-8 text-xs sm:text-sm text-gray-600">
               <div className="flex items-center space-x-2">
-                <svg className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M5.5 13a3.5 3.5 0 01-.369-6.98 4 4 0 117.753-1 4.5 4.5 0 11-4.814 6.98z" />
-                </svg>
+                <BsCalendarDate />
+
                 <span>{formatDate(blog.createdAt)}</span>
               </div>
               <div className="flex items-center space-x-2">
@@ -81,7 +81,7 @@ export default function BlogModal({ isOpen, onClose, blog }) {
                 {blog.expertiseIDs.map((expertiseId, index) => (
                   <span
                     key={index}
-                    className="inline-block bg-linear-to-r from-indigo-50 to-purple-50 text-indigo-700 border border-indigo-200 text-xs sm:text-sm font-semibold px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full"
+                    className="inline-block bg-linear-to-r from-green-50 to-green-100 text-primary border border-indigo-200 text-xs sm:text-sm font-semibold px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full"
                   >
                     {expertiseMap[expertiseId] || `Expertise ${expertiseId}`}
                   </span>

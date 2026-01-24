@@ -64,15 +64,15 @@ export default function Sidebar({ className }) {
           </li>
           <li className="mb-4">
             <Link
-              to="/enquiries"
+              to="/contacts"
               className={`flex items-center p-2 rounded-lg transition-colors duration-200 ${
-                isActive('/enquiries')
+                isActive('/contacts')
                   ? 'bg-[#ecfbda] text-secondary border-l-4 border-secondary font-medium'
                   : 'hover:bg-gray-200'
               }`}
             >
               <FaEnvelope className="mr-3" size={20} />
-              <span>Enquiries</span>
+              <span>Contacts</span>
             </Link>
           </li>
           <li className="mb-4">

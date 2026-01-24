@@ -3,7 +3,7 @@ import Navbar from './Components/Navbar/Navbar';
 import Sidebar from './Components/Navbar/Sidebar';
 import Dashboard from './Components/Dashboard/Dashboard';
 import Blogs from './Components/Blogs/Blogs';
-import Enquiries from './Components/Enquiries/Enquiries';
+import Contacts from './Components/Contacts/Contacts';
 import Login from './Components/Auth/Login';
 import ProtectedRoute from './Components/Auth/ProtectedRoute';
 import Signup from './Components/Auth/Signup';
@@ -30,7 +30,7 @@ function App() {
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="" element={<Dashboard />} />
                     <Route path="/blogs" element={<Blogs />} />
-                    <Route path="/enquiries" element={<Enquiries />} />
+                    <Route path="/Contacts" element={<Contacts />} />
                     <Route path="/career" element={<Career />} />
                   </Routes>
                 </div>

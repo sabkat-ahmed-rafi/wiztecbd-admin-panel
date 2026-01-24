@@ -5,3 +5,8 @@
   --color-primary: #6ab40a;   
   --color-secondary: #8bc43f; 
 }
+
+::selection {
+  background: #6ab40a; 
+  color: white;     
+}

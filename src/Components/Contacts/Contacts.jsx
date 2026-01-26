@@ -163,7 +163,7 @@ const Contacts = () => {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 gap-4 mb-8">
           <div className="bg-white rounded-xl shadow p-5">
             <div className="flex items-center justify-between">
               <div>
@@ -204,17 +204,6 @@ const Contacts = () => {
             </div>
           </div>
           
-          <div className="bg-white rounded-xl shadow p-5">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-500 text-sm">Active</p>
-                <p className="text-2xl font-bold text-gray-800 mt-1">{contacts.length}</p>
-              </div>
-              <div className="bg-stone-100 p-2.5 rounded-full">
-                <FaUser className="text-xl text-primary" />
-              </div>
-            </div>
-          </div>
         </div>
 
         {/* Search and layout Bar */}

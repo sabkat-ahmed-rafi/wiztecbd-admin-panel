@@ -125,7 +125,7 @@ const Contacts = () => {
       {/* Mobile Sidebar Overlay */}
       {isSidebarOpen && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          className="fixed inset-0 bg-black/40 backdrop-blur-xs bg-opacity-50 z-40 lg:hidden"
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
@@ -276,7 +276,7 @@ const Contacts = () => {
               </div>
             ) : viewMode === 'grid' ? (
               // Grid View
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-3 gap-4">
                 {filteredContacts.map((contact) => (
                   <div
                     key={contact.id}
@@ -371,16 +371,6 @@ const Contacts = () => {
                       <div className="hidden md:flex items-center space-x-6 text-sm">
                         <span className="text-gray-600">{contact.email}</span>
                         <span className="text-gray-600">{contact.mobile}</span>
-                        <div className="flex space-x-2">
-                          {contact.serviceIDs?.slice(0, 2).map((service, idx) => (
-                            <span
-                              key={idx}
-                              className="bg-secondary/10 text-primary px-2 py-1 rounded text-xs"
-                            >
-                              {service}
-                            </span>
-                          ))}
-                        </div>
                       </div>
                       
                       <div className="flex items-center space-x-2">
@@ -412,7 +402,7 @@ const Contacts = () => {
           </div>
 
           {/* Details Sidebar */}
-          <div className={`lg:w-1/3 xl:w-1/3 ${selectedContact ? 'lg:w-1/2 xl:w-1/3' : 'hidden'} lg:block`}>
+          <div className={`lg:w-2/3 xl:w-1/3 ${selectedContact ? 'lg:w-2/3 xl:w-1/3' : 'hidden'} lg:block`}>
             <div className={`lg:sticky lg:top-6 bg-white rounded-xl shadow-lg overflow-hidden ${
               isSidebarOpen 
                 ? 'fixed inset-y-0 right-0 w-full sm:w-96 z-50 transform transition-transform translate-x-0' 
@@ -456,7 +446,7 @@ const Contacts = () => {
                           <FaEnvelope />
                           <span>Email</span>
                         </label>
-                        <p className="text-gray-800 font-medium">{selectedContact.email}</p>
+                        <p className="text-gray-800 font-medium truncate">{selectedContact.email}</p>
                       </div>
                       
                       <div className="space-y-2">
@@ -484,7 +474,7 @@ const Contacts = () => {
                           href={`https://${selectedContact.companyWebsite}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-primary hover:underline font-medium text-wrap border"
+                          className="text-primary hover:underline font-medium text-wrap truncate"
                         >
                           {selectedContact.companyWebsite}
                         </a>

@@ -11,9 +11,7 @@ import {
   FaSpinner,
   FaExclamationCircle,
   FaSearch,
-  FaFilter,
   FaChevronRight,
-  FaEllipsisV
 } from 'react-icons/fa';
 import api from '../../config/axiosConfig';
 import { LuRefreshCcw } from "react-icons/lu";
@@ -25,7 +23,7 @@ const Contacts = () => {
   const [selectedContact, setSelectedContact] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
+  const [viewMode, setViewMode] = useState('grid');
 
   useEffect(() => {
     fetchContacts();
@@ -51,9 +49,13 @@ const Contacts = () => {
   };
 
   const handleContactClick = (contact) => {
-    setSelectedContact(selectedContact?.id === contact.id ? null : contact);
-    if (window.innerWidth < 1024) {
+    const isMobile = window.innerWidth < 1024;
+    
+    if (isMobile) {
+      setSelectedContact(contact);
       setIsSidebarOpen(true);
+    } else {
+      setSelectedContact(selectedContact?.id === contact.id ? null : contact);
     }
   };
 
@@ -64,11 +66,22 @@ const Contacts = () => {
         setContacts(contacts.filter(contact => contact.id !== contactId));
         if (selectedContact?.id === contactId) {
           setSelectedContact(null);
+          if (window.innerWidth < 1024) {
+            setIsSidebarOpen(false);
+          }
         }
       } catch (err) {
         setError('Failed to delete contact');
         console.error('Error deleting contact:', err);
       }
+    }
+  };
+
+  const closeSidebar = () => {
+    setIsSidebarOpen(false);
+    // Don't clear selectedContact on desktop
+    if (window.innerWidth < 1024) {
+      setSelectedContact(null);
     }
   };
 
@@ -125,8 +138,8 @@ const Contacts = () => {
       {/* Mobile Sidebar Overlay */}
       {isSidebarOpen && (
         <div 
-          className="fixed inset-0 bg-black/40 backdrop-blur-xs bg-opacity-50 z-40 lg:hidden"
-          onClick={() => setIsSidebarOpen(false)}
+          className="fixed inset-0 bg-black/40 backdrop-blur-xs z-40 lg:hidden"
+          onClick={closeSidebar}
         />
       )}
 
@@ -219,31 +232,29 @@ const Contacts = () => {
             </div>
             
             <div className="flex items-center space-x-3">
-
-              
-            {/* View Toggle */}
-            <div className="hidden sm:flex bg-white rounded-lg border border-stone-200 shadow-md p-1">
-              <button
-                onClick={() => setViewMode('grid')}
-                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors cursor-pointer ${
-                  viewMode === 'grid' 
-                    ? 'bg-primary text-white' 
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
-              >
-                Grid
-              </button>
-              <button
-                onClick={() => setViewMode('list')}
-                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors cursor-pointer ${
-                  viewMode === 'list' 
-                    ? 'bg-primary text-white' 
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
-              >
-                List
-              </button>
-            </div>
+              {/* View Toggle */}
+              <div className="hidden sm:flex bg-white rounded-lg border border-stone-200 shadow-md p-1">
+                <button
+                  onClick={() => setViewMode('grid')}
+                  className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors cursor-pointer ${
+                    viewMode === 'grid' 
+                      ? 'bg-primary text-white' 
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  Grid
+                </button>
+                <button
+                  onClick={() => setViewMode('list')}
+                  className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors cursor-pointer ${
+                    viewMode === 'list' 
+                      ? 'bg-primary text-white' 
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  List
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -251,7 +262,7 @@ const Contacts = () => {
         {/* Main Content */}
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Contacts Section */}
-          <div className={`lg:w-2/3 ${selectedContact ? 'lg:w-1/2 xl:w-2/3' : 'w-full'}`}>
+          <div className={`${selectedContact && !isSidebarOpen ? 'lg:w-2/3' : 'w-full'}`}>
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-bold text-gray-800">
                 All Contacts ({filteredContacts.length})
@@ -276,7 +287,7 @@ const Contacts = () => {
               </div>
             ) : viewMode === 'grid' ? (
               // Grid View
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
                 {filteredContacts.map((contact) => (
                   <div
                     key={contact.id}
@@ -369,8 +380,8 @@ const Contacts = () => {
                       </div>
                       
                       <div className="hidden md:flex items-center space-x-6 text-sm">
-                        <span className="text-gray-600">{contact.email}</span>
-                        <span className="text-gray-600">{contact.mobile}</span>
+                        <span className="text-gray-600 lg:hidden xl:block">{contact.email}</span>
+                        <span className="text-gray-600 lg:hidden 2xl:block">{contact.mobile}</span>
                       </div>
                       
                       <div className="flex items-center space-x-2">
@@ -402,24 +413,24 @@ const Contacts = () => {
           </div>
 
           {/* Details Sidebar */}
-          <div className={`lg:w-2/3 xl:w-1/3 ${selectedContact ? 'lg:w-2/3 xl:w-1/3' : 'hidden'} lg:block`}>
+          <div className={`w-full ${selectedContact || isSidebarOpen ? 'block' : 'hidden'} lg:block`}>
             <div className={`lg:sticky lg:top-6 bg-white rounded-xl shadow-lg overflow-hidden ${
               isSidebarOpen 
-                ? 'fixed inset-y-0 right-0 w-full sm:w-96 z-50 transform transition-transform translate-x-0' 
-                : 'lg:translate-x-0 -translate-x-full'
+                ? 'fixed inset-y-0 right-0 w-full sm:w-125 z-50 transform transition-transform duration-300 translate-x-0' 
+                : 'fixed inset-y-0 right-0 w-full sm:w-96 z-50 transform transition-transform duration-300 translate-x-full lg:relative lg:translate-x-0 lg:w-auto'
             }`}>
               {/* Mobile Sidebar Header */}
               <div className="lg:hidden flex items-center justify-between p-4 border-b">
                 <h2 className="text-xl font-bold text-gray-800">Contact Details</h2>
                 <button
-                  onClick={() => setIsSidebarOpen(false)}
-                  className="p-2 hover:bg-gray-100 rounded-lg"
+                  onClick={closeSidebar}
+                  className="p-2 hover:bg-gray-100 rounded-lg text-2xl"
                 >
                   ×
                 </button>
               </div>
               
-              <div className="p-6">
+              <div className="p-6 h-full overflow-y-auto lg:max-h-[calc(100vh-120px)]">
                 {selectedContact ? (
                   <div className="space-y-6">
                     {/* Contact Header */}
